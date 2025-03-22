@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  PROJECT_ID: stefan-ai-training                # Your GCP project ID
-  REGION: us-central1                           # Your GCP region
-  SERVICE: upload-center                       # Your Cloud Run service name
+  PROJECT_ID: stefan-ai-training                 # Your GCP project ID
+  REGION: us-central1                            # Your GCP region
+  SERVICE: upload-center                         # Cloud Run service name
   REPOSITORY: upload-center                      # Artifact Registry repo name
 
 jobs:
@@ -19,11 +19,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Google Cloud SDK
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
