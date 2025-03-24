@@ -1,6 +1,21 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const pool = require('./db'); // path to your db.js
 const app = express();
+
+app.use(express.json());
+
+// API route - fetch products
+app.get('/api/products', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM products');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    res.status(500).json({ error: 'Database query failed' });
+  }
+});
 
 // // Serve static files from "public"
 // app.use(express.static(path.join(__dirname, 'public')));
