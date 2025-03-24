@@ -13,6 +13,8 @@ app.get('/api/products', async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching products:', err);
+    console.error('🔴 DB ERROR:', err.message);
+    console.error(err.stack);
     res.status(500).json({ error: 'Database query failed' });
   }
 });
