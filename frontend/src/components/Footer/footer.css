@@ -1,0 +1,12 @@
+footer {
+  margin-block-start: auto;
+  background-color: var(--header-footer-bg);
+
+  & p {
+    text-align: center;
+  }
+
+  nav a {
+    border-block-start: 1px solid #333;
+  }
+}
