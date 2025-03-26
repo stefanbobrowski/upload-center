@@ -14,6 +14,7 @@
   --bg: #f9fafc;
   --text: #1a1a1a;
   --header-footer-bg: #eaf1fb;
+  --header-pattern-fill: %232979ff;
   --accent: #2979ff;
   --accent-hover: #2d7ff9;
 }
@@ -22,8 +23,10 @@
   --bg: #0f1115;
   --text: #e6e6e6;
   --header-footer-bg: #1c2026;
+  --header-pattern-fill: %23ffffff;
   --accent: #00b8ff;
   --accent-hover: #00c2ff;
+  color: #0a4aaa;
 }
 
 body {

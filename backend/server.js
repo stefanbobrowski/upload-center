@@ -3,8 +3,11 @@ const express = require('express');
 const path = require('path');
 const pool = require('./db'); // path to your db.js
 const app = express();
+const sentimentRoute = require('./routes/sentiment');
 
 app.use(express.json());
+
+app.use('/api/sentiment', sentimentRoute);
 
 // API route - fetch products
 app.get('/api/products', async (req, res) => {

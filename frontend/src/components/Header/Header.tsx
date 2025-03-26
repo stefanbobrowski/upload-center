@@ -20,7 +20,7 @@ const Header = () => {
         <Link to='/about'>About</Link>
       </nav>
       <div className='theme-toggle'>
-        <span>{darkMode ? 'Dark' : 'Light'} Mode</span>
+        <span>Light</span>
         <label className='switch'>
           <input
             type='checkbox'
@@ -29,6 +29,7 @@ const Header = () => {
           />
           <span className='slider round'></span>
         </label>
+        <span>Dark</span>
       </div>
     </header>
   );

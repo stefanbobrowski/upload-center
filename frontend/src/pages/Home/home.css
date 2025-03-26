@@ -1,0 +1,5 @@
+.feature-list {
+  & > li {
+    font-weight: bold;
+  }
+}

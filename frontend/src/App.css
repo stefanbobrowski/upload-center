@@ -15,7 +15,6 @@ main {
 
 nav {
   display: flex;
-  background-color: var(--header-footer-bg);
   color: var(--accent);
 
   a {

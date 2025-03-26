@@ -27,9 +27,9 @@ Built with React, Express, PostgreSQL, and deployed via **Cloud Run** using secu
 
 - ✅ Secure DB access using Cloud SQL Proxy
 - 🌍 React frontend hosted by Express
+- ⚡ TypeScript end-to-end (frontend)
 - ⚖️ PostgreSQL cloud-native database
 - ♻️ GitHub Actions for automatic deploys
-- ⚡ TypeScript end-to-end (frontend)
 
 ---
 
