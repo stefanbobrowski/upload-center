@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import './product-list.css';
 
 type Product = {
   id: number;
@@ -8,10 +9,14 @@ type Product = {
 
 export default function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
-  useEffect(() => {
+  // if (loading) return <p>Loading products...</p>;
+  if (error) return <p>{error}</p>;
+
+  const handleFetchProducts = () => {
+    setLoading(true);
     fetch('/api/products', { cache: 'no-store' })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch products');
@@ -26,15 +31,15 @@ export default function ProductList() {
         setError('Error loading products');
         setLoading(false);
       });
-  }, []);
-
-  if (loading) return <p>Loading products...</p>;
-  if (error) return <p>{error}</p>;
+  };
 
   return (
-    <section>
-      <h2>Products</h2>
-      <ul>
+    <section className='product-list-root'>
+      <button className='fetch-button' onClick={handleFetchProducts}>
+        Fetch Products
+      </button>
+      {loading && <p>Loading products...</p>}
+      <ul className='product-list'>
         {products.map((p) => (
           <li key={p.id}>
             <strong>{p.name}</strong> — ${p.price}

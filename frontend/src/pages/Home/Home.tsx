@@ -1,4 +1,4 @@
-// import ProductList from '../../components/ProductList/ProductList';
+import ProductList from '../../components/ProductList/ProductList';
 import SentimentChecker from '../../components/SentimentChecker/SentimentChecker';
 import './home.css';
 const Home = () => {
@@ -9,7 +9,7 @@ const Home = () => {
       <ol className='feature-list'>
         <li>Cloud SQL integration</li>
         <p>'Live product data from Google Cloud SQL'</p>
-        {/* <ProductList /> */} Disabled for now
+        <ProductList />
         <li>Vertex AI integration - Sentiment Analysis</li>
         <SentimentChecker />
         <li>Vision AI - Text + Image Upload</li>

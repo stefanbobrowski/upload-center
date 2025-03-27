@@ -2,11 +2,15 @@ const express = require('express');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const router = express.Router();
-
-// Load your Gemini API key from environment
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 router.post('/', async (req, res) => {
+  console.log(
+    `[SENTIMENT] IP: ${req.ip}, User-Agent: ${req.get(
+      'user-agent'
+    )}, Time: ${new Date().toISOString()}`
+  );
+
   const { text } = req.body;
 
   if (!text || typeof text !== 'string') {
@@ -33,15 +37,15 @@ Text: "${text}"
     });
 
     const output = result.response.text().trim();
-
-    // Try to extract the JSON object from the output
     const jsonMatch = output.match(/\{[\s\S]*\}/);
     const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : { raw: output };
 
     res.json({ sentiment: parsed });
   } catch (err) {
     console.error('Gemini Sentiment Error:', err);
-    res.status(500).json({ error: 'Sentiment analysis failed' });
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Sentiment analysis failed' });
+    }
   }
 });
 

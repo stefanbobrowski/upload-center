@@ -4,8 +4,16 @@ const path = require('path');
 const pool = require('./db'); // path to your db.js
 const app = express();
 const sentimentRoute = require('./routes/sentiment');
+const rateLimit = require('express-rate-limit');
 
 app.use(express.json());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+app.use('/api', limiter); // Apply to all API routes
 
 app.use('/api/sentiment', sentimentRoute);
 

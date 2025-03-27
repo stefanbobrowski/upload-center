@@ -14,7 +14,11 @@ const Header = () => {
 
   return (
     <header>
-      <h1>Stefan Cloud Playground</h1>
+      <h1>
+        Stefan Cloud
+        <br />
+        Playground
+      </h1>
       <nav>
         <Link to='/'>Home</Link>
         <Link to='/about'>About</Link>
