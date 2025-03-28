@@ -5,8 +5,21 @@ const pool = require('./db'); // path to your db.js
 const app = express();
 const sentimentRoute = require('./routes/sentiment');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 
 app.use(express.json());
+
+// Only allow requests from your frontend domain
+app.use(
+  cors({
+    origin: [
+      'https://upload-center-177749780343.us-central1.run.app/',
+      'http://localhost:5173',
+    ], // include localhost for dev
+    methods: ['GET', 'POST'],
+    optionsSuccessStatus: 200,
+  })
+);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

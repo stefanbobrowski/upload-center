@@ -77,9 +77,9 @@ const About = () => {
         <strong>securing access</strong> and <strong>preventing abuse</strong>{' '}
         of cloud resources. Measures like <strong>rate limiting</strong>,{' '}
         <strong>frontend request cooldowns</strong>, <strong>IP logging</strong>
-        , and <strong>reCAPTCHA v3 protection</strong> ensure the site is
-        resilient against bot traffic and excessive API use — both in demo and
-        production environments.
+        , CORS restrictions, and <strong>reCAPTCHA v3 protection</strong> ensure
+        the site is resilient against bot traffic and excessive API use — both
+        in demo and production environments.
       </p>
 
       <p>
