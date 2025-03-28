@@ -10,15 +10,19 @@ app.use(express.json());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 10 requests per windowMs
+  max: 3, // limit each IP to 10 requests per window
   message: 'Too many requests from this IP, please try again later.',
 });
+const productLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 3, // Limit each IP to 5 product requests per window
+  message: 'Too many requests for products. Please try again later.',
+});
+
 app.use('/api', limiter); // Apply to all API routes
 
-app.use('/api/sentiment', sentimentRoute);
-
 // API route - fetch products
-app.get('/api/products', async (req, res) => {
+app.get('/api/products', productLimiter, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM products');
     res.json(result.rows);
@@ -29,6 +33,8 @@ app.get('/api/products', async (req, res) => {
     res.status(500).json({ error: 'Database query failed' });
   }
 });
+
+app.use('/api/sentiment', sentimentRoute);
 
 // // Serve static files from "public"
 // app.use(express.static(path.join(__dirname, 'public')));

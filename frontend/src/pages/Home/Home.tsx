@@ -8,9 +8,13 @@ const Home = () => {
       <p>Here are a few examples of Google Cloud Services and AI</p>
       <ol className='feature-list'>
         <li>Cloud SQL integration</li>
-        <p>'Live product data from Google Cloud SQL'</p>
+        <p>
+          Live product data from Google Cloud SQL. Rate-limited express
+          requests. Session storage to persist data and matched request rate
+          limits on refresh.
+        </p>
         <ProductList />
-        <li>Vertex AI integration - Sentiment Analysis</li>
+        <li>Gemini AI integration - Sentiment Analysis</li>
         <SentimentChecker />
         <li>Vision AI - Text + Image Upload</li>
         <li>Fire/SQL realtime chat OR message board</li>

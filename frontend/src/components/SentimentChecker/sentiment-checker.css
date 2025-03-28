@@ -4,6 +4,7 @@
   border-radius: 3px;
   max-width: 600px;
   margin-block: 1rem;
+  background-color: var(--header-footer-bg);
 }
 
 .sentiment-checker textarea {

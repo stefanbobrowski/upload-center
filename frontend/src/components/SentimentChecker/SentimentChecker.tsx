@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './sentiment-checker.css';
 
 interface SentimentResult {
@@ -6,7 +6,17 @@ interface SentimentResult {
   score: number;
 }
 
+declare global {
+  interface Window {
+    grecaptcha: {
+      execute(siteKey: string, options: { action: string }): Promise<string>;
+      ready(callback: () => void): void;
+    };
+  }
+}
+
 const MAX_REQUESTS = 3;
+const RECAPTCHA_SITE_KEY = '6LeGJwIrAAAAAB0bVze42uHwybeLsHD79rLf4J0t'; // Replace with your actual key
 
 export default function SentimentChecker() {
   const [text, setText] = useState('');
@@ -14,7 +24,15 @@ export default function SentimentChecker() {
   const [error, setError] = useState<string | null>(null);
   const [lastAnalyzedText, setLastAnalyzedText] = useState('');
   const [requestsRemaining, setRequestsRemaining] = useState(MAX_REQUESTS);
+  const [loading, setLoading] = useState(false);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Ensure grecaptcha is ready before first use
+    if (window.grecaptcha) {
+      window.grecaptcha.ready(() => {});
+    }
+  }, []);
 
   const analyze = async () => {
     setError(null);
@@ -35,19 +53,28 @@ export default function SentimentChecker() {
       return;
     }
 
+    setLoading(true);
+
     try {
+      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
+        action: 'analyze',
+      });
+
       const response = await fetch('/api/sentiment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-demo-token': 'demo-1234', // optional gatekeeping
+          'x-recaptcha-token': token,
         },
         body: JSON.stringify({ text }),
       });
 
       const data = await response.json();
 
-      if (data.sentiment?.sentiment && data.sentiment?.score !== undefined) {
+      if (
+        data.sentiment?.sentiment &&
+        typeof data.sentiment?.score === 'number'
+      ) {
         setResult({
           sentiment: data.sentiment.sentiment,
           score: data.sentiment.score,
@@ -61,15 +88,18 @@ export default function SentimentChecker() {
     } catch (err) {
       console.error('Request failed:', err);
       setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
     setText(newText);
+
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
-      // Ready for analysis if needed
+      // You can trigger analysis here if doing auto-analyze
     }, 500);
   };
 
@@ -82,8 +112,11 @@ export default function SentimentChecker() {
         value={text}
         onChange={handleChange}
       />
-      <button onClick={analyze} disabled={!text || requestsRemaining <= 0}>
-        Analyze
+      <button
+        onClick={analyze}
+        disabled={!text || requestsRemaining <= 0 || loading}
+      >
+        {loading ? 'Analyzing...' : 'Analyze'}
       </button>
 
       <div className='request-counter'>

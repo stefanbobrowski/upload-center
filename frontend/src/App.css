@@ -11,10 +11,14 @@
 main {
   flex: 1;
   padding: 1rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 nav {
   display: flex;
+  flex-wrap: wrap;
   color: var(--accent);
 
   a {

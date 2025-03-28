@@ -14,26 +14,24 @@ const Header = () => {
 
   return (
     <header>
-      <h1>
-        Stefan Cloud
-        <br />
-        Playground
-      </h1>
-      <nav>
-        <Link to='/'>Home</Link>
-        <Link to='/about'>About</Link>
-      </nav>
-      <div className='theme-toggle'>
-        <span>Light</span>
-        <label className='switch'>
-          <input
-            type='checkbox'
-            onChange={handleToggleDarkMode}
-            checked={darkMode}
-          />
-          <span className='slider round'></span>
-        </label>
-        <span>Dark</span>
+      <div className='header-inner-container'>
+        <h1>Stefan Cloud Playground</h1>
+        <nav>
+          <Link to='/'>Home</Link>
+          <Link to='/about'>About</Link>
+        </nav>
+        <div className='theme-toggle'>
+          <span>Light</span>
+          <label className='switch'>
+            <input
+              type='checkbox'
+              onChange={handleToggleDarkMode}
+              checked={darkMode}
+            />
+            <span className='slider round'></span>
+          </label>
+          <span>Dark</span>
+        </div>
       </div>
     </header>
   );
