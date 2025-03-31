@@ -23,6 +23,10 @@ header {
   margin: 0 auto;
 }
 
+.logo-home-link {
+  display: inline-block;
+}
+
 .theme-toggle {
   position: absolute;
   top: 1rem;

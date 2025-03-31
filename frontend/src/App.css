@@ -22,10 +22,12 @@ nav {
 
   a {
     display: block;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     border-inline-end: 1px solid #333;
+    border-block-end: 1px solid #777;
     border-collapse: collapse;
     background-color: #ddd;
+    font-weight: 400;
 
     &:first-of-type {
       border-inline-start: 1px solid #333;
@@ -37,6 +39,10 @@ nav {
   }
 }
 
+.nav-link.active {
+  color: #d8a17b;
+}
+
 .request-counter {
   color: rgb(175, 132, 39);
   font-size: 0.875rem;
@@ -46,4 +52,12 @@ nav {
   &.depleted {
     color: #e53e3e;
   }
+}
+
+.small-text {
+  position: relative;
+  left: 1rem;
+  top: -0.7rem;
+  margin-block-start: 0;
+  font-size: 0.7rem;
 }

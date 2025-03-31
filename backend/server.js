@@ -36,34 +36,35 @@ app.use(
 );
 
 // ✅ Rate limiters
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: 'Too many requests from this IP, please try again later.',
-});
 const productLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 3,
   message: 'Too many requests for products. Please try again later.',
-  standardHeaders: true, // ✅ Adds X-RateLimit-* headers
+  standardHeaders: true,
   legacyHeaders: false,
 });
 const sentimentLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 3,
   message: 'Too many sentiment analysis requests. Please try again later.',
-  standardHeaders: true, // ✅ Adds X-RateLimit-* headers
+  standardHeaders: true,
   legacyHeaders: false,
 });
 const analyzeLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 3,
   message: 'Too many image analysis requests. Please try again later.',
-  standardHeaders: true, // ✅ Adds X-RateLimit-* headers
+  standardHeaders: true,
   legacyHeaders: false,
 });
+// Global rate limiter for all API routes
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 10,
+//   message: 'Too many requests from this IP, please try again later.',
+// });
 
-app.use('/api', limiter);
+// app.use('/api', limiter);
 
 // ✅ Routes
 app.get('/api/products', productLimiter, async (req, res) => {

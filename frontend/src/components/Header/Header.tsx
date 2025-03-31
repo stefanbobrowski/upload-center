@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import './header.css';
 
 const Header = () => {
@@ -15,10 +15,26 @@ const Header = () => {
   return (
     <header>
       <div className='header-inner-container'>
-        <h1>Stefan Cloud Playground</h1>
+        <Link to='/' className='logo-home-link'>
+          <h1>Cloud Playground</h1>
+        </Link>
         <nav>
-          <Link to='/'>Home</Link>
-          <Link to='/about'>About</Link>
+          <NavLink
+            to='/'
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to='/about'
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            About
+          </NavLink>
         </nav>
         <div className='theme-toggle'>
           <span>Light</span>

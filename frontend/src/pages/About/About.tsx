@@ -64,7 +64,7 @@ const About = () => {
           </tr>
           <tr>
             <td>Storage</td>
-            <td>Cloud Storage (for image uploads and media handling)</td>
+            <td>Cloud Storage</td>
           </tr>
           <tr>
             <td>Build</td>

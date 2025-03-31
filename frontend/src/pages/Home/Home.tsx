@@ -1,23 +1,29 @@
+import { Link } from 'react-router-dom';
 import ProductList from '../../components/ProductList/ProductList';
 import SentimentChecker from '../../components/SentimentChecker/SentimentChecker';
 import ImageAnalyzer from '../../components/ImageAnalyzer/ImageAnalyzer';
 import './home.css';
+
 const Home = () => {
   return (
     <main>
       <h1>Home</h1>
-      <p>Here are a few examples of Google Cloud Services and AI</p>
+      <p>
+        Welcome to my Cloud Playground. <Link to='/about'>What is it?</Link>
+      </p>
+      <p>Here are a few examples* of Google Cloud Services and AI.</p>
+      <p className='small-text'>
+        <i>
+          * Requests are limited to 3 per example, 10 total that resets every 15
+          minutes.
+        </i>
+      </p>
       <ol className='feature-list'>
-        <li>Cloud SQL integration</li>
-        <p>
-          Live product data from Google Cloud SQL. Rate-limited express
-          requests. Session storage to persist data and matched request rate
-          limits on refresh.
-        </p>
+        <li>Cloud SQL - Retrieve Data</li>
         <ProductList />
-        <li>Gemini AI integration - Sentiment Analysis</li>
+        <li>Gemini AI - Sentiment Analysis</li>
         <SentimentChecker />
-        <li>Vision AI - Text + Image Upload</li>
+        <li>Gemini AI - Image Upload and Analysis</li>
         <ImageAnalyzer />
         <li>Fire/SQL realtime chat OR message board</li>
         <li>Cloud Storage Upload - optional signed URLs</li>

@@ -1,9 +1,10 @@
 .image-analyzer {
   padding: 1rem;
-  border: 1px solid #aaa;
+  border: 2px solid var(--accent);
   border-radius: 3px;
   max-width: 600px;
-  margin-block: 1rem;
+  margin-block: 1rem 1.5rem;
+  box-shadow: 0 7px 7px rgba(0, 0, 0, 0.3);
   background-color: var(--header-footer-bg);
 }
 

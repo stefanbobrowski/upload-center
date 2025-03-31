@@ -69,7 +69,7 @@ export default function SentimentChecker() {
         body: JSON.stringify({ text }),
       });
 
-      const remaining = response.headers.get('X-RateLimit-Remaining');
+      const remaining = response.headers.get('ratelimit-remaining');
       if (remaining !== null) {
         setRequestsRemaining(parseInt(remaining, 10));
       }
@@ -108,6 +108,7 @@ export default function SentimentChecker() {
   return (
     <div className='sentiment-checker'>
       <h3>Gemini Sentiment Analysis</h3>
+      <p>Accepts text and JSON.</p>
       <textarea
         rows={5}
         placeholder='Enter a sentiment here like "I love this product. Will buy again."'

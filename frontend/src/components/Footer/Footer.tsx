@@ -1,17 +1,45 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './footer.css';
 
 const Footer = () => {
   return (
     <footer>
       <div className='footer-inner-container'>
-        <p>&copy; 2025 Stefan Bobrowski • Stefan Cloud Playground.</p>
         <nav>
-          <Link to='/'>Home</Link>
-          <Link to='/about'>About</Link>
-          <Link to='/privacy'>Privacy Policy</Link>
-          <Link to='/terms'>Terms of Service</Link>
+          <NavLink
+            to='/'
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to='/about'
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            About
+          </NavLink>
+          <NavLink
+            to='/privacy'
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            Privacy Policy
+          </NavLink>
+          <NavLink
+            to='/terms'
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            Terms of Service
+          </NavLink>
         </nav>
+        <p>&copy; 2025 Stefan Bobrowski • Stefan Cloud Playground.</p>
       </div>
     </footer>
   );

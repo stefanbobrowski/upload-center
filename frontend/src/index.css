@@ -12,18 +12,17 @@ h4,
 h5,
 h6 {
   margin-block-start: 0;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1;
 }
 
 h1 {
   font-size: 3.2em;
+  font-weight: 400;
 }
 
 :root {
   /* html tag */
-  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-   */
   font-family: 'Rubik', sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -37,7 +36,7 @@ h1 {
 
   --bg: #f3f8ff;
   --text: #1a1a1a;
-  --header-footer-bg: #dbf1f8;
+  --header-footer-bg: #aec7d2;
   --accent: #2e8da4;
   --accent-hover: #22b1d5;
 }
@@ -45,7 +44,8 @@ h1 {
 [theme='dark'] {
   --bg: #0d0f12;
   --text: #e6e6e6;
-  --header-footer-bg: #1a2022;
+  --header-footer-bg: #223138;
+  /* --header-footer-bg: #1a2022; */
 }
 
 body {
@@ -94,7 +94,7 @@ button:focus-visible {
 }
 
 button:disabled {
-  background-color: #ccc;
+  background-color: #bbb;
   border-color: #aaa;
   cursor: not-allowed;
 }

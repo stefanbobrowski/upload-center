@@ -24,7 +24,7 @@ export default function ProductList() {
     setLoading(true);
     fetch('/api/products')
       .then((res) => {
-        const remaining = res.headers.get('X-RateLimit-Remaining');
+        const remaining = res.headers.get('ratelimit-remaining');
         if (remaining !== null) {
           setRequestsRemaining(parseInt(remaining, 10));
         }

@@ -35,7 +35,13 @@ const ImageAnalyzer = () => {
         body: formData,
       });
 
-      const remaining = res.headers.get('X-RateLimit-Remaining');
+      const remaining = res.headers.get('ratelimit-remaining');
+      console.log('Rate limit remaining:', remaining); // ← debug
+
+      for (const [key, value] of res.headers.entries()) {
+        console.log(key + ': ' + value);
+      }
+
       if (remaining !== null) {
         setRequestsRemaining(parseInt(remaining, 10));
       }
@@ -64,7 +70,7 @@ const ImageAnalyzer = () => {
 
   return (
     <div className='image-analyzer'>
-      <h2>Vision AI - Image Analyzer</h2>
+      <h3>Gemini Image Analyzer</h3>
       <p>
         Choose an image, provide a prompt, and let Vision AI take care of the
         rest.
