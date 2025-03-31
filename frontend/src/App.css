@@ -10,7 +10,7 @@
 
 main {
   flex: 1;
-  padding: 1rem;
+  padding: 2rem 1rem;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
@@ -19,13 +19,31 @@ main {
 nav {
   display: flex;
   flex-wrap: wrap;
-  color: var(--accent);
 
   a {
     display: block;
+    padding: 1rem;
     border-inline-end: 1px solid #333;
     border-collapse: collapse;
-    padding: 1rem;
-    background-color: #eee;
+    background-color: #ddd;
+
+    &:first-of-type {
+      border-inline-start: 1px solid #333;
+    }
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+}
+
+.request-counter {
+  color: rgb(175, 132, 39);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  &.depleted {
+    color: #e53e3e;
   }
 }

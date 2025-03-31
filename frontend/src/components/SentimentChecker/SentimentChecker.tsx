@@ -15,20 +15,20 @@ declare global {
   }
 }
 
-const MAX_REQUESTS = 3;
-const RECAPTCHA_SITE_KEY = '6LeGJwIrAAAAAB0bVze42uHwybeLsHD79rLf4J0t'; // Replace with your actual key
+const RECAPTCHA_SITE_KEY = '6LeGJwIrAAAAAB0bVze42uHwybeLsHD79rLf4J0t';
 
 export default function SentimentChecker() {
   const [text, setText] = useState('');
   const [result, setResult] = useState<SentimentResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [lastAnalyzedText, setLastAnalyzedText] = useState('');
-  const [requestsRemaining, setRequestsRemaining] = useState(MAX_REQUESTS);
+  const [requestsRemaining, setRequestsRemaining] = useState<number | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Ensure grecaptcha is ready before first use
     if (window.grecaptcha) {
       window.grecaptcha.ready(() => {});
     }
@@ -48,7 +48,7 @@ export default function SentimentChecker() {
       return;
     }
 
-    if (requestsRemaining <= 0) {
+    if (requestsRemaining === 0) {
       setError('Request limit reached.');
       return;
     }
@@ -69,6 +69,11 @@ export default function SentimentChecker() {
         body: JSON.stringify({ text }),
       });
 
+      const remaining = response.headers.get('X-RateLimit-Remaining');
+      if (remaining !== null) {
+        setRequestsRemaining(parseInt(remaining, 10));
+      }
+
       const data = await response.json();
 
       if (
@@ -80,7 +85,6 @@ export default function SentimentChecker() {
           score: data.sentiment.score,
         });
         setLastAnalyzedText(text);
-        setRequestsRemaining((prev) => prev - 1);
       } else {
         setError('Invalid response from server.');
         console.warn('Raw sentiment response:', data);
@@ -98,9 +102,7 @@ export default function SentimentChecker() {
     setText(newText);
 
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(() => {
-      // You can trigger analysis here if doing auto-analyze
-    }, 500);
+    debounceTimer.current = setTimeout(() => {}, 500);
   };
 
   return (
@@ -108,20 +110,26 @@ export default function SentimentChecker() {
       <h3>Gemini Sentiment Analysis</h3>
       <textarea
         rows={5}
-        placeholder='Type something here like "I love this product. Will buy again."'
+        placeholder='Enter a sentiment here like "I love this product. Will buy again."'
         value={text}
         onChange={handleChange}
       />
       <button
         onClick={analyze}
-        disabled={!text || requestsRemaining <= 0 || loading}
+        disabled={!text || requestsRemaining === 0 || loading}
       >
         {loading ? 'Analyzing...' : 'Analyze'}
       </button>
 
-      <div className='request-counter'>
-        Requests remaining: {requestsRemaining}
-      </div>
+      {requestsRemaining !== null && (
+        <div
+          className={`request-counter${
+            requestsRemaining <= 0 ? ' depleted' : ''
+          }`}
+        >
+          Requests remaining: {requestsRemaining}
+        </div>
+      )}
 
       {error && <div className='error-message'>{error}</div>}
 

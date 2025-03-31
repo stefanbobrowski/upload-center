@@ -1,0 +1,20 @@
+.image-analyzer {
+  padding: 1rem;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  max-width: 600px;
+  margin-block: 1rem;
+  background-color: var(--header-footer-bg);
+}
+
+input {
+  border: 1px solid #333;
+  padding: 0.5rem;
+  background-color: #fff;
+}
+.text-input {
+  width: 100%;
+  margin-block: 1rem;
+  font-size: 1rem;
+  color: #333;
+}

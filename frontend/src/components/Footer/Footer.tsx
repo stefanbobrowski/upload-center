@@ -4,13 +4,15 @@ import './footer.css';
 const Footer = () => {
   return (
     <footer>
-      <p>&copy; 2025 Stefan Cloud Playground. All rights reserved.</p>
-      <nav>
-        <Link to='/'>Home</Link>
-        <Link to='/about'>About</Link>
-        <Link to='/privacy'>Privacy Policy</Link>
-        <Link to='/terms'>Terms of Service</Link>
-      </nav>
+      <div className='footer-inner-container'>
+        <p>&copy; 2025 Stefan Bobrowski • Stefan Cloud Playground.</p>
+        <nav>
+          <Link to='/'>Home</Link>
+          <Link to='/about'>About</Link>
+          <Link to='/privacy'>Privacy Policy</Link>
+          <Link to='/terms'>Terms of Service</Link>
+        </nav>
+      </div>
     </footer>
   );
 };

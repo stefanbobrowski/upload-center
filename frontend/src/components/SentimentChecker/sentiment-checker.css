@@ -10,27 +10,17 @@
 .sentiment-checker textarea {
   display: block;
   width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
   margin-bottom: 1rem;
-}
-
-.sentiment-checker button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  padding: 0.5rem;
+  background-color: #fff;
+  color: #222;
+  font-size: 1rem;
 }
 
 .error-message {
   color: #e53e3e;
   margin-top: 1rem;
   font-weight: bold;
-}
-
-.request-counter {
-  font-size: 0.875rem;
-  color: #555;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
 }
 
 .sentiment-result {

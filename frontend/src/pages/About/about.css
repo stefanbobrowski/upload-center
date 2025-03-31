@@ -1,6 +1,7 @@
 table {
   margin-block: 1rem;
-  margin-inline: auto;
+  margin-inline: 0;
+  background-color: var(--header-footer-bg);
 }
 
 table,

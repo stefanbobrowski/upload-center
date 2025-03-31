@@ -1,5 +1,6 @@
 import ProductList from '../../components/ProductList/ProductList';
 import SentimentChecker from '../../components/SentimentChecker/SentimentChecker';
+import ImageAnalyzer from '../../components/ImageAnalyzer/ImageAnalyzer';
 import './home.css';
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
         <li>Gemini AI integration - Sentiment Analysis</li>
         <SentimentChecker />
         <li>Vision AI - Text + Image Upload</li>
+        <ImageAnalyzer />
         <li>Fire/SQL realtime chat OR message board</li>
         <li>Cloud Storage Upload - optional signed URLs</li>
         <li>Pub/Sub integration - Realtime updates</li>

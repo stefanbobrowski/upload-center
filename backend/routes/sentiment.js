@@ -37,9 +37,7 @@ router.post('/', async (req, res) => {
     );
 
     const { success, score } = verifyRes.data;
-    console.log(
-      `[reCAPTCHA] Score: ${score}, Action: ${action}, Success: ${success}`
-    );
+    console.log(`[reCAPTCHA] Score: ${score}, Success: ${success}`);
 
     if (!success || score < 0.5) {
       return res.status(403).json({ error: 'Failed reCAPTCHA verification' });

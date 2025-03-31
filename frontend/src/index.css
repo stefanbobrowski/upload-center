@@ -12,11 +12,19 @@ h4,
 h5,
 h6 {
   margin-block-start: 0;
+  font-weight: 400;
+  line-height: 1;
+}
+
+h1 {
+  font-size: 3.2em;
 }
 
 :root {
   /* html tag */
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+   */
+  font-family: 'Rubik', sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
@@ -29,17 +37,15 @@ h6 {
 
   --bg: #f3f8ff;
   --text: #1a1a1a;
-  --header-footer-bg: #deebfd;
-  --accent: #2979ff;
-  --accent-hover: #2d7ff9;
+  --header-footer-bg: #dbf1f8;
+  --accent: #2e8da4;
+  --accent-hover: #22b1d5;
 }
 
 [theme='dark'] {
   --bg: #0d0f12;
   --text: #e6e6e6;
-  --header-footer-bg: #1a1d22;
-  --accent: #00b8ff;
-  --accent-hover: #00c2ff;
+  --header-footer-bg: #1a2022;
 }
 
 body {
@@ -55,6 +61,10 @@ p {
   max-width: 600px;
 }
 
+ul {
+  max-width: 600px;
+}
+
 a {
   font-weight: 500;
   color: var(--accent);
@@ -62,11 +72,6 @@ a {
 }
 a:hover {
   color: var(--accent-hover);
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
 }
 
 button {
@@ -86,4 +91,10 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+button:disabled {
+  background-color: #ccc;
+  border-color: #aaa;
+  cursor: not-allowed;
 }
