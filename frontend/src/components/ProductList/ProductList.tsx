@@ -81,9 +81,8 @@ export default function ProductList() {
 
       {requestsRemaining !== null && (
         <div
-          className={`request-counter${
-            requestsRemaining <= 0 ? ' depleted' : ''
-          }`}
+          className={`request-counter${requestsRemaining <= 0 ? ' depleted' : ''
+            }`}
         >
           Requests remaining: {requestsRemaining}
         </div>

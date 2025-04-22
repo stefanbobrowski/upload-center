@@ -115,7 +115,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     const responseText = data.candidates?.length
       ? data.candidates[0].content?.parts?.[0]?.text ||
-        'Response format unexpected'
+      'Response format unexpected'
       : 'No candidates returned from Gemini';
 
     res.json({ response: responseText });

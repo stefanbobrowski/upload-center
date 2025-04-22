@@ -16,10 +16,11 @@ Built with React, Express, PostgreSQL, and deployed via **Cloud Run** using secu
 
 - **Frontend:** React (Vite + TypeScript)
 - **Backend:** Node.js + Express
-- **Database:** PostgreSQL (Google Cloud SQL)
-- **Infra:** Google Cloud Run (Dockerized)
-- **Security:** Cloud SQL Auth Proxy (Unix socket connection)
+- **Database:** Cloud SQL (Postgres SQL)
+- **Storage:** Cloud Storage
+- **Security:** Cloud SQL Auth Proxy (Unix socket connection), Cloud IAM, reCAPTCHA v3, Rate Limiters, Helmet, CORS,
 - **CI/CD:** GitHub Actions + Docker
+- **Infra:** Google Cloud Run (Dockerized)
 
 ---
 
@@ -30,6 +31,17 @@ Built with React, Express, PostgreSQL, and deployed via **Cloud Run** using secu
 - ⚡ TypeScript end-to-end (frontend)
 - ⚖️ PostgreSQL cloud-native database
 - ♻️ GitHub Actions for automatic deploys
+- ReCaptcha
+- Persistent Light/Dark Mode theme
+- 
+- Cloud SQL example
+- Gemini AI - Sentiment Analysis
+- Gemini AI - Image Upload (multer local disk) and Analysis
+- Cloud Storage upload, text file, images
+- Vertex AI analysis of text file
+- Cloud Storage json upload for big data
+- BigQuery actions on cloud storage data file
+- 
 
 ---
 
@@ -45,12 +57,12 @@ Built with React, Express, PostgreSQL, and deployed via **Cloud Run** using secu
 
 ---
 
-<!-- ## ⚙️ Local Development
+## ⚙️ Local Development
 
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-name/upload-center.git
+git clone https://github.com/stefanbobrowski/upload-center.git
 cd upload-center
 ```
 
@@ -59,11 +71,11 @@ cd upload-center
 Create `backend/.env`:
 
 ```env
-DB_USER=postgres
-DB_PASSWORD=yourpassword
+DB_USER=your-db-user
+DB_PASSWORD=your-db-password
 DB_HOST=your-cloud-sql-ip (or socket path)
-DB_NAME=upload_city
-DB_PORT=5432
+DB_NAME=your-db-name
+DB_PORT=your-db-port
 ```
 
 ### 3. Start the frontend
@@ -105,24 +117,14 @@ docker push gcr.io/YOUR_PROJECT_ID/upload-center
 Add these variables to your Cloud Run service:
 
 ```
-DB_USER=postgres
-DB_PASSWORD=yourpassword
-DB_NAME=upload_city
-DB_PORT=5432
+DB_USER=your-db-user
+DB_PASSWORD=your-password
+DB_NAME=your-db-name
+DB_PORT=your-db-port
 INSTANCE_CONNECTION_NAME=your-project:region:cloudsql-instance
 ```
 
-### 4. Attach Cloud SQL Connection
-
-- Go to Cloud Run > Edit > Connections
-- Add your SQL instance under **"Cloud SQL Connections"**
-
-### 5. Redeploy & test
-
-- Revisit your deployed Cloud Run URL
-- Confirm `/api/products` returns DB data
-
---- -->
+### 4. ???
 
 ## 🤔 Future Work
 

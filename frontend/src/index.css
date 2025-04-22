@@ -54,7 +54,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background-color: #eeefff; /* Fallback */
+  background-color: #eeefff;
+  /* Fallback */
 }
 
 p {
@@ -70,6 +71,7 @@ a {
   color: var(--accent);
   text-decoration: inherit;
 }
+
 a:hover {
   color: var(--accent-hover);
 }
@@ -85,9 +87,11 @@ button {
   background-color: #446aa4;
   cursor: pointer;
 }
+
 button:hover {
   background-color: #608bcd;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;

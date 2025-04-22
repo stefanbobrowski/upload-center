@@ -1,15 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './header.css';
 
 const Header = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored === 'dark';
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return prefersDark;
+  });
+
+  useEffect(() => {
+    const theme = darkMode ? 'dark' : 'light';
+    document.documentElement.setAttribute('theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [darkMode]);
 
   const handleToggleDarkMode = () => {
-    const nextMode = !darkMode;
-    const attr = nextMode ? 'dark' : 'light';
-    setDarkMode(nextMode);
-    document.documentElement.setAttribute('theme', attr);
+    setDarkMode((prev) => !prev);
   };
 
   return (
@@ -44,7 +52,7 @@ const Header = () => {
               onChange={handleToggleDarkMode}
               checked={darkMode}
             />
-            <span className='slider round'></span>
+            <span className='slider'></span>
           </label>
           <span>Dark</span>
         </div>

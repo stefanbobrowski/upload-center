@@ -1,5 +1,5 @@
 .feature-list {
-  & > li {
+  &>li {
     font-weight: bold;
     margin-block: 1rem;
   }

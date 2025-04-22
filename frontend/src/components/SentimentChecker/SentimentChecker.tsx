@@ -30,7 +30,7 @@ export default function SentimentChecker() {
 
   useEffect(() => {
     if (window.grecaptcha) {
-      window.grecaptcha.ready(() => {});
+      window.grecaptcha.ready(() => { });
     }
   }, []);
 
@@ -102,7 +102,7 @@ export default function SentimentChecker() {
     setText(newText);
 
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(() => {}, 500);
+    debounceTimer.current = setTimeout(() => { }, 500);
   };
 
   return (
@@ -124,9 +124,8 @@ export default function SentimentChecker() {
 
       {requestsRemaining !== null && (
         <div
-          className={`request-counter${
-            requestsRemaining <= 0 ? ' depleted' : ''
-          }`}
+          className={`request-counter${requestsRemaining <= 0 ? ' depleted' : ''
+            }`}
         >
           Requests remaining: {requestsRemaining}
         </div>

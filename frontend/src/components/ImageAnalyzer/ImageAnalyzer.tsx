@@ -11,6 +11,8 @@ const ImageAnalyzer = () => {
     null
   );
 
+
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!image || !prompt) return;
@@ -21,7 +23,7 @@ const ImageAnalyzer = () => {
 
     try {
       const recaptchaToken = await window.grecaptcha.execute(
-        '6LeGJwIrAAAAAB0bVze42uHwybeLsHD79rLf4J0t',
+        import.meta.env.VITE_RECAPTCHA_SITE_KEY,
         { action: 'analyze_image' }
       );
 
@@ -100,9 +102,8 @@ const ImageAnalyzer = () => {
         </button>
         {requestsRemaining !== null && (
           <div
-            className={`request-counter${
-              requestsRemaining <= 0 ? ' depleted' : ''
-            }`}
+            className={`request-counter${requestsRemaining <= 0 ? ' depleted' : ''
+              }`}
           >
             Requests remaining: {requestsRemaining}
           </div>
