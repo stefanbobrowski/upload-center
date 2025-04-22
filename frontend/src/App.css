@@ -23,15 +23,12 @@ nav {
   a {
     display: block;
     padding: 0.5rem 1rem;
-    border-inline-end: 1px solid #333;
-    border-block-end: 1px solid #777;
+
     border-collapse: collapse;
     background-color: #ddd;
     font-weight: 400;
 
-    &:first-of-type {
-      border-inline-start: 1px solid #333;
-    }
+
 
     &:hover {
       background-color: #eee;
@@ -39,8 +36,18 @@ nav {
   }
 }
 
+header nav a {
+  border-inline-end: 1px solid #333;
+  border-block-end: 1px solid #777;
+}
+
+footer nav a {
+  border-inline-start: 1px solid #333;
+  border-block-start: 1px solid #777;
+}
+
 .nav-link.active {
-  color: #d8a17b;
+  color: var(--orange);
 }
 
 .request-counter {
@@ -60,4 +67,14 @@ nav {
   top: -0.7rem;
   margin-block-start: 0;
   font-size: 0.7rem;
+}
+
+.example-container {
+  padding: 1rem;
+  border: 1px solid var(--input-text);
+  border-radius: 3px;
+  max-width: 600px;
+  margin-block: 1rem 1.5rem;
+  background-color: var(--header-footer-bg);
+  box-shadow: 0 7px 7px rgba(0, 0, 0, 0.3);
 }

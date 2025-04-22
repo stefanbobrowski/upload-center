@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './product-list.css';
+import './product-list.scss';
 
 type Product = {
   id: number;
@@ -58,16 +58,20 @@ export default function ProductList() {
   }, []);
 
   return (
-    <section className='product-list-root'>
+    <section className='product-list-root example-container'>
+      <h3>Cloud SQL - Retrieve Data</h3>
       {products.length === 0 && (
         <button
           className='fetch-button'
           onClick={handleFetchProducts}
-          disabled={requestsRemaining === 0}
+          // disabled={requestsRemaining === 0}
+          disabled
         >
           Fetch Products
         </button>
+
       )}
+      <p style={{ color: '#c44' }}>(Disabled due to cost of $1.63 a day.)</p>
 
       {loading && <p>Loading products...</p>}
       <ul className='product-list'>

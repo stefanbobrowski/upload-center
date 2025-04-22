@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import './footer.css';
+import './footer.scss';
 
 const Footer = () => {
   return (
@@ -15,12 +15,12 @@ const Footer = () => {
             Home
           </NavLink>
           <NavLink
-            to='/about'
+            to='/examples'
             className={({ isActive }) =>
               isActive ? 'nav-link active' : 'nav-link'
             }
           >
-            About
+            Examples
           </NavLink>
           <NavLink
             to='/privacy'

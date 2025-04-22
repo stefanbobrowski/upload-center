@@ -1,5 +1,5 @@
 header {
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 25px rgba(216, 161, 123, 0.2);
   background-color: var(--header-footer-bg);
 
   & h1 {
@@ -7,7 +7,6 @@ header {
     margin-block-end: 1.5rem;
     font-size: clamp(2rem, 7vw, 3rem);
     padding-inline: 1rem;
-
     font-family: 'Orbitron', sans-serif;
     font-weight: 700;
     text-transform: uppercase;

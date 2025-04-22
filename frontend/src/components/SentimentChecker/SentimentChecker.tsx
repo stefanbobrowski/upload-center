@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import './sentiment-checker.css';
+import './sentiment-checker.scss';
 
 interface SentimentResult {
   sentiment: string;
@@ -106,8 +106,8 @@ export default function SentimentChecker() {
   };
 
   return (
-    <div className='sentiment-checker'>
-      <h3>Gemini Sentiment Analysis</h3>
+    <div className='sentiment-checker example-container'>
+      <h3>Gemini AI - Sentiment Analysis</h3>
       <p>Accepts text and JSON.</p>
       <textarea
         rows={5}

@@ -1,38 +1,105 @@
 import { Link } from 'react-router-dom';
-import ProductList from '../../components/ProductList/ProductList';
-import SentimentChecker from '../../components/SentimentChecker/SentimentChecker';
-import ImageAnalyzer from '../../components/ImageAnalyzer/ImageAnalyzer';
-import './home.css';
 
 const Home = () => {
   return (
     <main>
       <h1>Home</h1>
       <p>
-        Welcome to my Cloud Playground. <Link to='/about'>What is it?</Link>
+        Welcome to my Cloud Playground!
       </p>
-      <p>Here are a few examples* of Google Cloud Services and AI.</p>
-      <p className='small-text'>
-        <i>
-          * Requests are limited to 3 per example, 10 total that resets every 15
-          minutes.
-        </i>
+
+      <p>Go right to <Link to='/examples'>Examples</Link>.</p>
+
+      <p>
+        This site is a hands-on demo of what I&apos;ve been learning while
+        diving into the world of backend development, cloud infrastructure, and
+        AI — all powered by <strong>Google Cloud Platform (GCP)</strong>.
       </p>
-      <ol className='feature-list'>
-        <li>Cloud SQL - Retrieve Data</li>
-        <ProductList />
-        <li>Gemini AI - Sentiment Analysis</li>
-        <SentimentChecker />
-        <li>Gemini AI - Image Upload and Analysis</li>
-        <ImageAnalyzer />
-        <li>Fire/SQL realtime chat OR message board</li>
-        <li>Cloud Storage Upload - optional signed URLs</li>
-        <li>Pub/Sub integration - Realtime updates</li>
+
+      <p>
+        It showcases a growing stack I&apos;ve become comfortable using, built
+        around key GCP services:
+      </p>
+
+      <ul>
         <li>
-          BigQuery Demo: Stats on your data: Run a BigQuery job that summarizes
-          Cloud SQL product data e.g., category breakdowns, prices, inventory.
+          <strong>Cloud SQL (PostgreSQL)</strong> for structured data storage.
         </li>
-      </ol>
+        <li>
+          <strong>Cloud Run</strong> for hosting scalable backend APIs and
+          delivering the full Dockerized web app to users.
+        </li>
+        <li>
+          <strong>Cloud Storage</strong> for handling file/media uploads and
+          static content.
+        </li>
+        <li>
+          <strong>Gemini AI</strong> for powerful multimodal capabilities such
+          as language and image analysis.
+        </li>
+      </ul>
+
+      <h2>New Google Cloud Stack:</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Technologies Used</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Frontend</td>
+            <td>Vite + React, TypeScript SWC</td>
+          </tr>
+          <tr>
+            <td>Backend</td>
+            <td>Node.js, Express</td>
+          </tr>
+          <tr>
+            <td>AI</td>
+            <td>Gemini 1.5 Pro (text + image), Cloud Vision SafeSearch</td>
+          </tr>
+          <tr>
+            <td>Security</td>
+            <td>Cloud IAM, reCAPTCHA v3, Rate Limiters, Helmet, CORS, </td>
+          </tr>
+          <tr>
+            <td>Database</td>
+            <td>Cloud SQL (PostgresSQL)</td>
+          </tr>
+          <tr>
+            <td>Storage</td>
+            <td>Cloud Storage</td>
+          </tr>
+          <tr>
+            <td>Build</td>
+            <td>Docker</td>
+          </tr>
+          <tr>
+            <td>CI/CD</td>
+            <td>GitHub Actions</td>
+          </tr>
+          <tr>
+            <td>Deployment and Hosting</td>
+            <td>Google Cloud Run, Artifact Registry</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        In addition to integrating these services, I’ve focused heavily on{' '}
+        <strong>securing access</strong> and <strong>preventing abuse</strong>{' '}
+        of cloud resources. Measures like rate limiting, reCAPTCHA v3
+        protection, IP logging, express CORS and helmet restrictions, ensure the
+        site is resilient against bot traffic and excessive API use — both in
+        demo and production environments.
+      </p>
+
+      <p>
+        This isn't just a learning tool — it’s a foundation for building
+        scalable, secure, cloud-native apps.
+      </p>
     </main>
   );
 };

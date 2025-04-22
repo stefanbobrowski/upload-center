@@ -7,6 +7,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const sentimentRoute = require('./routes/sentiment');
 const analyzeImageRoute = require('./routes/analyze-image');
+const uploadFileRoute = require('./routes/upload-file');
+const analyzeTextRoute = require('./routes/analyze-text');
+
 
 const app = express();
 
@@ -57,6 +60,13 @@ const analyzeLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+// const uploadLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 3,
+//   message: 'Too many image analysis requests. Please try again later.',
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 // Global rate limiter for all API routes
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000,
@@ -82,6 +92,9 @@ app.get('/api/products', productLimiter, async (req, res) => {
 
 app.use('/api/sentiment', sentimentLimiter, sentimentRoute);
 app.use('/api/analyze-image', analyzeLimiter, analyzeImageRoute);
+app.use('/api/upload-file', uploadFileRoute);
+app.use('/api/analyze-text', analyzeTextRoute);
+
 
 // ✅ Health check route
 app.get('/health', (req, res) => {

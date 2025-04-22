@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import './header.css';
+import './header.scss';
 
 const Header = () => {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
@@ -36,12 +36,12 @@ const Header = () => {
             Home
           </NavLink>
           <NavLink
-            to='/about'
+            to='/examples'
             className={({ isActive }) =>
               isActive ? 'nav-link active' : 'nav-link'
             }
           >
-            About
+            Examples
           </NavLink>
         </nav>
         <div className='theme-toggle'>

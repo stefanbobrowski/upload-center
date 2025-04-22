@@ -1,5 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
-import './image-analyzer.css';
+import './image-analyzer.scss';
 
 const ImageAnalyzer = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -71,8 +71,8 @@ const ImageAnalyzer = () => {
   };
 
   return (
-    <div className='image-analyzer'>
-      <h3>Gemini Image Analyzer</h3>
+    <div className='image-analyzer example-container'>
+      <h3>Gemini AI - Image Analyzer</h3>
       <p>
         Choose an image, provide a prompt, and let Vision AI take care of the
         rest.
