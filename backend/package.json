@@ -1,7 +1,7 @@
 {
-  "name": "upload-center",
+  "name": "upload-center-backend",
   "version": "1.0.0",
-  "description": "GCP template",
+  "description": "Backend server for Upload Center — handles file uploads, BigQuery analysis, AI processing, and secure APIs (GCP powered).",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,11 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stefanbobrowski/upload-center.git"
+    "url": "https://github.com/stefanbobrowski/upload-center.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "express",
+    "nodejs",
+    "google-cloud",
+    "bigquery",
+    "storage",
+    "gcp",
+    "cloud-run"
+  ],
+  "author": "Stefan Bobrowski",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/stefanbobrowski/upload-center/issues"
   },
