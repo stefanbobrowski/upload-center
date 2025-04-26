@@ -71,7 +71,7 @@ export default function ProductList() {
         </button>
 
       )}
-      <p style={{ color: '#c44' }}>(Disabled due to cost of $1.63 a day.)</p>
+      <p className="disabled-text">(Disabled due to cost of $1.63 a day.)</p>
 
       {loading && <p>Loading products...</p>}
       <ul className='product-list'>

@@ -3,43 +3,33 @@ import { Link } from 'react-router-dom';
 const Home = () => {
   return (
     <main>
-      <h1>Home</h1>
+      <h1>Upload Center 🌆</h1>
       <p>
         Welcome to my Cloud Playground!
       </p>
 
-      <p>Go right to <Link to='/examples'>Examples</Link>.</p>
-
       <p>
-        This site is a hands-on demo of what I&apos;ve been learning while
-        diving into the world of backend development, cloud infrastructure, and
-        AI — all powered by <strong>Google Cloud Platform (GCP)</strong>.
+        Head straight to the <Link to="/examples">Examples</Link> to see it in action.
       </p>
 
       <p>
-        It showcases a growing stack I&apos;ve become comfortable using, built
-        around key GCP services:
+        This site is a hands-on demonstration of what I've been building while diving deeper into backend development,
+        cloud infrastructure, and AI integrations — all powered by <strong>Google Cloud Platform (GCP)</strong>.
+      </p>
+
+      <p>
+        It showcases a secure, scalable full-stack architecture using a modern GCP-first stack, including:
       </p>
 
       <ul>
-        <li>
-          <strong>Cloud SQL (PostgreSQL)</strong> for structured data storage.
-        </li>
-        <li>
-          <strong>Cloud Run</strong> for hosting scalable backend APIs and
-          delivering the full Dockerized web app to users.
-        </li>
-        <li>
-          <strong>Cloud Storage</strong> for handling file/media uploads and
-          static content.
-        </li>
-        <li>
-          <strong>Gemini AI</strong> for powerful multimodal capabilities such
-          as language and image analysis.
-        </li>
+        <li><strong>Cloud SQL (PostgreSQL)</strong> for structured database storage.</li>
+        <li><strong>Cloud Run</strong> for hosting Dockerized backend APIs and delivering the entire web app.</li>
+        <li><strong>Cloud Storage</strong> for managing text, image, and JSON file uploads.</li>
+        <li><strong>BigQuery</strong> for large-scale data analysis on uploaded JSON files.</li>
+        <li><strong>Vertex AI & Gemini AI</strong> for advanced text and image analysis.</li>
       </ul>
 
-      <h2>New Google Cloud Stack:</h2>
+      <h2>Technology Stack Overview</h2>
       <table>
         <thead>
           <tr>
@@ -50,7 +40,7 @@ const Home = () => {
         <tbody>
           <tr>
             <td>Frontend</td>
-            <td>Vite + React, TypeScript SWC</td>
+            <td>Vite + React (TypeScript, SWC)</td>
           </tr>
           <tr>
             <td>Backend</td>
@@ -58,19 +48,23 @@ const Home = () => {
           </tr>
           <tr>
             <td>AI</td>
-            <td>Gemini 1.5 Pro (text + image), Cloud Vision SafeSearch</td>
+            <td>Gemini 1.5 Pro (text + image), Vertex AI Text Analysis</td>
           </tr>
           <tr>
-            <td>Security</td>
-            <td>Cloud IAM, reCAPTCHA v3, Rate Limiters, Helmet, CORS, </td>
+            <td>Big Data</td>
+            <td>BigQuery</td>
           </tr>
           <tr>
             <td>Database</td>
-            <td>Cloud SQL (PostgresSQL)</td>
+            <td>Cloud SQL (PostgreSQL)</td>
           </tr>
           <tr>
             <td>Storage</td>
-            <td>Cloud Storage</td>
+            <td>Google Cloud Storage</td>
+          </tr>
+          <tr>
+            <td>Security</td>
+            <td>Cloud IAM, Rate Limiters, Helmet, CORS, reCAPTCHA v3 (planned)</td>
           </tr>
           <tr>
             <td>Build</td>
@@ -78,27 +72,23 @@ const Home = () => {
           </tr>
           <tr>
             <td>CI/CD</td>
-            <td>GitHub Actions</td>
+            <td>GitHub Actions (Docker build and deploy)</td>
           </tr>
           <tr>
-            <td>Deployment and Hosting</td>
+            <td>Hosting</td>
             <td>Google Cloud Run, Artifact Registry</td>
           </tr>
         </tbody>
       </table>
 
       <p>
-        In addition to integrating these services, I’ve focused heavily on{' '}
-        <strong>securing access</strong> and <strong>preventing abuse</strong>{' '}
-        of cloud resources. Measures like rate limiting, reCAPTCHA v3
-        protection, IP logging, express CORS and helmet restrictions, ensure the
-        site is resilient against bot traffic and excessive API use — both in
-        demo and production environments.
+        In addition to integrating these services, I've focused heavily on <strong>securing access</strong> and <strong>preventing abuse</strong> of cloud resources.
+        Measures like API rate limiting, reCAPTCHA v3 (optional), IP logging, strict CORS policies, and secure Helmet configurations
+        ensure the platform is resilient against bot traffic and excessive API use — both for demo and real-world production use.
       </p>
 
       <p>
-        This isn't just a learning tool — it’s a foundation for building
-        scalable, secure, cloud-native apps.
+        Upload Center isn't just a learning project — it's a real foundation for building scalable, secure, cloud-native applications.
       </p>
     </main>
   );

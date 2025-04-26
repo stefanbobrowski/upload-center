@@ -1,6 +1,6 @@
 footer {
   margin-block-start: auto;
-  box-shadow: 0 -15px 30px rgba(216, 161, 123, 0.25);
+  box-shadow: 0 -15px 30px var(--light20);
   background-color: var(--header-footer-bg);
 
   & p {

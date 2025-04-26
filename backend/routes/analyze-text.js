@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
 
         const result = await model.generateContent({
-            contents: [{ role: 'user', parts: [{ text: `Analyze this text:\n\n${text}` }] }],
+            contents: [{ role: 'user', parts: [{ text: `Summarize this text in 2-3 sentences:\n\n${text}` }] }],
         });
 
         const responseText = result.response.text();

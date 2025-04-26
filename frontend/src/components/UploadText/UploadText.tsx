@@ -44,12 +44,12 @@ const UploadText = () => {
 
   return (
     <section className="example-container">
-      <h3>Vertex AI + Cloud Storage - Upload text file</h3>
+      <h3>Cloud Storage + Vertex AI - Upload text file + Summary</h3>
 
       <UploadInput
         acceptedTypes={['.txt']}
         storagePath="uploads/text-files/"
-        label="Upload Text File"
+        label="Upload a Text File (.txt) to Cloud Storage, summarize with Vertex AI after upload"
         onUploadSuccess={handleUploadSuccess}
         onError={handleUploadError}
         onUploadStart={() => {
@@ -66,14 +66,14 @@ const UploadText = () => {
         {uploadStatus === 'error' && <p className="error">❌ Upload failed: {errorMessage}</p>}
 
         {analyzeStatus === 'starting' && <p>🧠 Starting Vertex AI Analysis...</p>}
-        {analyzeStatus === 'processing' && <p>🧠 Analyzing<span className="dot-anim" /></p>}
+        {analyzeStatus === 'processing' && <p>🧠 Summarizing<span className="dot-anim" /></p>}
         {analyzeStatus === 'success' && (
           <>
-            <p className="success">✅ Analysis complete:</p>
+            <p className="success">✅ Summary complete:</p>
             <pre className="result">{analysisResult}</pre>
           </>
         )}
-        {analyzeStatus === 'error' && <p className="error">❌ Analysis failed: {errorMessage}</p>}
+        {analyzeStatus === 'error' && <p className="error">❌ Summary failed: {errorMessage}</p>}
       </div>
     </section>
   );

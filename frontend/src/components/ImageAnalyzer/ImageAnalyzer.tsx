@@ -73,12 +73,13 @@ const ImageAnalyzer = () => {
   return (
     <div className='image-analyzer example-container'>
       <h3>Gemini AI - Image Analyzer</h3>
-      <p>
-        Choose an image, provide a prompt, and let Vision AI take care of the
-        rest.
-      </p>
       <form onSubmit={handleSubmit}>
-        <input type='file' accept='image/*' onChange={handleFileChange} />
+        <label>   <p>
+          Choose an image, provide a prompt, and let Vision AI take care of the
+          rest.
+        </p>
+          <input type='file' accept='image/*' onChange={handleFileChange} />
+        </label>
         <br />
         <input
           className='text-input'

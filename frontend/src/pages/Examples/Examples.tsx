@@ -2,7 +2,8 @@ import ProductList from '../../components/ProductList/ProductList';
 import SentimentChecker from '../../components/SentimentChecker/SentimentChecker';
 import ImageAnalyzer from '../../components/ImageAnalyzer/ImageAnalyzer';
 import UploadText from '../../components/UploadText/UploadText';
-import './examples.css';
+import UploadJSON from '../../components/UploadJSON/UploadJSON';
+import './examples.scss';
 
 const Examples = () => {
     return (
@@ -15,18 +16,12 @@ const Examples = () => {
                     minutes.
                 </i>
             </p>
-            <ol type="I">
+            <ol className='example-list' type="I">
                 <li><ProductList /></li>
                 <li><SentimentChecker /></li>
                 <li><ImageAnalyzer /></li>
                 <li><UploadText /></li>
-                <li>Cloud Storage Upload - optional signed URLs</li>
-                <li>Pub/Sub integration - Realtime updates</li>
-                <li>
-                    BigQuery Demo: Stats on your data: Run a BigQuery job that summarizes
-                    Cloud SQL product data e.g., category breakdowns, prices, inventory.
-                </li>
-                <li>Fire/SQL realtime chat OR message board</li>
+                <li><UploadJSON /></li>
             </ol>
         </main>
     );

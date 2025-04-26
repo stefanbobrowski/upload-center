@@ -1,38 +1,68 @@
-import { useState, ChangeEvent } from 'react';
+import { useRef } from 'react';
 
-export interface UploadInputProps {
-  acceptedTypes: string[]; // e.g., ['.txt', 'image/*']
-  storagePath: string;     // e.g., 'uploads/text-files/'
-  label?: string;
-  onUploadSuccess?: (gcsUrl: string) => void;
-  onError?: (error: string) => void;
-  onUploadStart?: () => void;
-}
+type UploadInputProps = {
+  acceptedTypes: string[];
+  storagePath: string;
+  label: string;
+  onUploadStart: () => void;
+  onUploadSuccess: (url: string) => void;
+  onError: (error: string) => void;
+};
 
-export const UploadInput = ({
-  acceptedTypes,
-  storagePath,
-  label = 'Upload File',
-  onUploadSuccess,
-  onError,
-  onUploadStart,
-}: UploadInputProps) => {
-  const [file, setFile] = useState<File | null>(null);
+export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, onUploadSuccess, onError }: UploadInputProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      setFile(e.target.files[0]);
-    }
+  // ✅ Generate a unique ID per instance
+  const uniqueId = useRef(`file-upload-${Math.random().toString(36).substr(2, 9)}`).current;
+
+  const validateAndPrepareFile = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const content = event.target?.result as string;
+
+          if (content.trim().startsWith('[')) {
+            // Regular JSON array detected
+            const parsed = JSON.parse(content);
+            if (!Array.isArray(parsed)) {
+              throw new Error('Expected a JSON array.');
+            }
+
+            // Convert to NDJSON (newline-delimited JSON)
+            const ndjson = parsed.map((obj: any) => JSON.stringify(obj)).join('\n');
+            const blob = new Blob([ndjson], { type: 'application/json' });
+            const convertedFile = new File([blob], file.name, { type: 'application/json' });
+
+            resolve(convertedFile);
+          } else {
+            // Newline-delimited JSON detected
+            const lines = content.split('\n').filter(Boolean);
+            for (const line of lines) {
+              JSON.parse(line); // Will throw if not valid
+            }
+            resolve(file); // No need to modify
+          }
+        } catch (err: any) {
+          reject(new Error('Invalid JSON format: ' + err.message));
+        }
+      };
+      reader.onerror = () => reject(new Error('Error reading file'));
+      reader.readAsText(file);
+    });
   };
 
-  const handleUpload = async () => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
-    onUploadStart?.();
+    onUploadStart();
 
     try {
+      const validatedFile = await validateAndPrepareFile(file);
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', validatedFile);
       formData.append('path', storagePath);
 
       const res = await fetch('/api/upload-file', {
@@ -40,32 +70,37 @@ export const UploadInput = ({
         body: formData,
       });
 
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Upload failed: ${errorText.slice(0, 100)}`);
+      }
+
       const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || 'Upload failed');
-
-      onUploadSuccess?.(data.url);
+      onUploadSuccess(data.url);
     } catch (err: any) {
-      const errorMessage = err.message || 'Upload failed';
-      onError?.(errorMessage);
+      console.error('Upload error:', err);
+      onError(err.message);
+    } finally {
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
     }
   };
 
   return (
     <div className="upload-input">
-      <label>{label}</label>
-      <input
-        type="file"
-        accept={acceptedTypes.join(',')}
-        onChange={handleFileChange}
-      />
-      <button
-        type="button"
-        disabled={!file}
-        onClick={handleUpload}
-      >
-        Upload
-      </button>
+      <label className="upload-label" htmlFor="file-upload">
+        <p>{label}</p>
+        <input
+          id={uniqueId}
+          ref={inputRef}
+          type="file"
+          accept={acceptedTypes.join(',')}
+          onChange={handleFileChange}
+          hidden
+        />
+      </label>
+
     </div>
   );
 };

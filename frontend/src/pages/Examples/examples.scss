@@ -1,0 +1,21 @@
+.example-list {
+
+    h3 {
+        color: var(--accent);
+    }
+}
+
+.example-container {
+    max-width: 600px;
+    margin-block-end: 1.5rem;
+    padding: 1rem;
+    border-radius: 3px;
+    background-color: var(--header-footer-bg);
+    // border: 1px solid var(--accent);
+    box-shadow: 2px 2px 7px var(--accent);
+    color: var(--text);
+}
+
+.disabled-text {
+    color: #d89f4e;
+}

@@ -1,8 +1,13 @@
 # Upload Center 🌆
 
-A full-stack web application for uploading, storing, and managing data, powered by **Google Cloud Platform**.
-Designed for scalability, modularity, and modern DevOps workflows.
-Built with React, Express, PostgreSQL, and deployed via **Cloud Run** using secure **Cloud SQL Proxy** connections.
+A full-stack web application for uploading, analyzing, and managing data using **Google Cloud Platform** services.
+Built for scalability, security, and modern DevOps workflows.
+
+👉 React + Vite Frontend  
+👉 Express + Node.js Backend  
+👉 Google Cloud Storage, BigQuery, Cloud SQL  
+👉 Cloud Run deployment with secure Cloud SQL Proxy  
+👉 Full API security protections (Rate Limiters, CORS, Helmet, IP Logging)
 
 ---
 
@@ -12,47 +17,47 @@ Built with React, Express, PostgreSQL, and deployed via **Cloud Run** using secu
 
 ---
 
-## 🛠️ Tech Stack
+## 💠 Tech Stack
 
 - **Frontend:** React (Vite + TypeScript)
 - **Backend:** Node.js + Express
-- **Database:** Cloud SQL (Postgres SQL)
-- **Storage:** Cloud Storage
-- **Security:** Cloud SQL Auth Proxy (Unix socket connection), Cloud IAM, reCAPTCHA v3, Rate Limiters, Helmet, CORS,
+- **Database:** Cloud SQL (PostgreSQL)
+- **Storage:** Google Cloud Storage (GCS)
+- **Big Data Analysis:** BigQuery
+- **AI Integrations:** Vertex AI, Gemini AI (Sentiment + Image Analysis)
+- **Security:** Cloud SQL Auth Proxy, Google Cloud IAM, reCAPTCHA v3 (planned), Rate Limiters, Helmet, CORS
 - **CI/CD:** GitHub Actions + Docker
-- **Infra:** Google Cloud Run (Dockerized)
+- **Hosting/Infra:** Google Cloud Run (Dockerized)
 
 ---
 
 ## ✨ Features
 
-- ✅ Secure DB access using Cloud SQL Proxy
-- 🌍 React frontend hosted by Express
-- ⚡ TypeScript end-to-end (frontend)
-- ⚖️ PostgreSQL cloud-native database
-- ♻️ GitHub Actions for automatic deploys
-- ReCaptcha
-- Persistent Light/Dark Mode theme
-- 
-- Cloud SQL example
-- Gemini AI - Sentiment Analysis
-- Gemini AI - Image Upload (multer local disk) and Analysis
-- Cloud Storage upload, text file, images
-- Vertex AI analysis of text file
-- Cloud Storage json upload for big data
-- BigQuery actions on cloud storage data file
-- 
+- ✅ Secure PostgreSQL access with Cloud SQL Proxy
+- ✅ Upload and validate JSON files to Cloud Storage
+- ✅ Auto-convert JSON arrays to newline-delimited JSON (NDJSON)
+- ✅ Load and analyze uploaded files with BigQuery
+- ✅ Display total rows, category breakdowns, and average scores
+- ✅ Upload and analyze images with Gemini AI
+- ✅ Vertex AI text file sentiment analysis
+- ✅ Rate limiting on all sensitive routes
+- ✅ IP logging for uploads and BigQuery loads
+- ✅ CORS-restricted access to trusted domains
+- ✅ Persistent Light/Dark Mode Theme
+- ✅ GitHub Actions CI/CD for Dockerized Cloud Run deployment
+- ✅ Fully responsive frontend
 
 ---
 
 ## 📂 Project Structure
 
 ```
-/frontend       # React Vite frontend
-/backend        # Express server + DB API routes
-/backend/db.js  # PostgreSQL connection (via Cloud SQL Proxy)
-/.env           # Local environment variables (gitignored)
-/.github/workflows/google-cloudrun-docker.yml  # GitHub Actions CI/CD
+/frontend            # Vite + React frontend
+/backend             # Express server + API routes
+/backend/db.js       # PostgreSQL connection (via Cloud SQL Proxy)
+/backend/routes      # Upload, BigQuery, Sentiment, Image Analysis
+/.env                # Environment variables (gitignored)
+/.github/workflows/  # GitHub Actions CI/CD workflow files
 ```
 
 ---
@@ -76,6 +81,8 @@ DB_PASSWORD=your-db-password
 DB_HOST=your-cloud-sql-ip (or socket path)
 DB_NAME=your-db-name
 DB_PORT=your-db-port
+GOOGLE_APPLICATION_CREDENTIALS=path-to-your-service-account.json
+RECAPTCHA_SECRET_KEY=your-recaptcha-key (optional for bot protection)
 ```
 
 ### 3. Start the frontend
@@ -112,9 +119,7 @@ docker build -t gcr.io/YOUR_PROJECT_ID/upload-center .
 docker push gcr.io/YOUR_PROJECT_ID/upload-center
 ```
 
-### 3. Set Cloud Run env vars
-
-Add these variables to your Cloud Run service:
+### 3. Set Cloud Run environment variables
 
 ```
 DB_USER=your-db-user
@@ -122,25 +127,35 @@ DB_PASSWORD=your-password
 DB_NAME=your-db-name
 DB_PORT=your-db-port
 INSTANCE_CONNECTION_NAME=your-project:region:cloudsql-instance
+GOOGLE_APPLICATION_CREDENTIALS=inline-json-or-mount-secret
+RECAPTCHA_SECRET_KEY=your-recaptcha-key (optional)
 ```
 
-### 4. ???
+### 4. Deploy via GitHub Actions or `gcloud run deploy`
+
+---
 
 ## 🤔 Future Work
 
-- Upload product images to Google Cloud Storage
-- Add user authentication (e.g. Firebase Auth or Clerk)
-- Admin dashboard for product management
-- Search, filtering, and pagination features
+- User authentication (Firebase Auth or Clerk)
+- Admin dashboard for managing uploads and analysis results
+- Upload product images + automatic resizing
+- Full GraphQL or gRPC backend (optional)
+- reCAPTCHA v3 on upload forms
+- GCS lifecycle rules (auto-delete old files after X days)
 
 ---
 
 ## 👨‍💼 Author
 
-Created by [@stefanbobrowski](https://github.com/stefanbobrowski) — feel free to reach out or contribute!
+Created by [@stefanbobrowski](https://github.com/stefanbobrowski) —  
+Feel free to reach out, contribute, or fork this project!
 
 ---
 
 ## 📄 License
 
-Licensed under the **Apache License 2.0**. See [LICENSE](./LICENSE) for details.
+Licensed under the **Apache License 2.0**.  
+See [LICENSE](./LICENSE) for full details.
+
+---
