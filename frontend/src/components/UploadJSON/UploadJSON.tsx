@@ -6,21 +6,18 @@ const UploadJSON = () => {
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle');
   const [uploadMessage, setUploadMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [queryResult, setQueryResult] = useState<any | null>(null);
 
   const handleUploadStart = () => {
     setUploadStatus('uploading');
     setUploadMessage('📤 Uploading JSON file to Cloud Storage...');
     setErrorMessage(null);
-    setFileUrl(null);
     setQueryResult(null);
   };
 
   const handleUploadSuccess = async (url: string) => {
     setUploadStatus('uploading');
     setUploadMessage('✅ Uploaded to Cloud Storage.\n📡 Sending to BigQuery...');
-    setFileUrl(url);
 
     try {
       setUploadStatus('analyzing');
