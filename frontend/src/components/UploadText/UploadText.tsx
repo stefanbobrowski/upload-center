@@ -36,32 +36,30 @@ const UploadText = () => {
     }
 
     try {
-      window.grecaptcha.ready(async () => {
-        const recaptchaToken = await getRecaptchaToken('analyze_text');
+      const recaptchaToken = await getRecaptchaToken('analyze_text');
 
-        setAnalyzeStatus('processing');
+      setAnalyzeStatus('processing');
 
-        const res = await fetch('/api/analyze-text', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-recaptcha-token': recaptchaToken,
-          },
-          body: JSON.stringify({ gcsUrl: url }),
-        });
-
-        const remaining = res.headers.get('ratelimit-remaining');
-        if (remaining !== null) {
-          setRequestsRemaining(parseInt(remaining, 10));
-        }
-
-        const data = await res.json();
-
-        if (!res.ok) throw new Error(data.error || 'Vertex AI analysis failed.');
-
-        setAnalysisResult(data.result || 'No result returned.');
-        setAnalyzeStatus('success');
+      const res = await fetch('/api/analyze-text', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-recaptcha-token': recaptchaToken,
+        },
+        body: JSON.stringify({ gcsUrl: url }),
       });
+
+      const remaining = res.headers.get('ratelimit-remaining');
+      if (remaining !== null) {
+        setRequestsRemaining(parseInt(remaining, 10));
+      }
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Vertex AI analysis failed.');
+
+      setAnalysisResult(data.result || 'No result returned.');
+      setAnalyzeStatus('success');
     } catch (err: any) {
       console.error('Analysis error:', err);
       setAnalyzeStatus('error');

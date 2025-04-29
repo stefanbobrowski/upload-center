@@ -63,7 +63,6 @@ export default function SentimentChecker() {
     setLoading(true);
 
     try {
-      window.grecaptcha.ready(async () => {
         const recaptchaToken = await getRecaptchaToken('analyze_text');
 
         const response = await fetch('/api/sentiment', {
@@ -91,7 +90,6 @@ export default function SentimentChecker() {
         }
 
         setLoading(false);
-      });
     } catch (err) {
       console.error('Request failed:', err);
       setError('Something went wrong. Please try again.');
