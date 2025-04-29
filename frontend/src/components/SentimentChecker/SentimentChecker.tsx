@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useRequestCounter } from '../../context/RequestCounterContext';
 import { useRecaptchaReady } from '../../helpers/RecaptchaProvider';
+import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 import './sentiment-checker.scss';
 
 interface SentimentResult {
@@ -17,10 +18,8 @@ declare global {
   }
 }
 
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 const MAX_LENGTH = 250;
 const WARNING_THRESHOLD = 200;
-
 
 export default function SentimentChecker() {
   const [text, setText] = useState('');
@@ -64,35 +63,38 @@ export default function SentimentChecker() {
     setLoading(true);
 
     try {
-      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'analyze' });
+      window.grecaptcha.ready(async () => {
+        const recaptchaToken = await getRecaptchaToken('analyze_text');
 
-      const response = await fetch('/api/sentiment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-recaptcha-token': token,
-        },
-        body: JSON.stringify({ text }),
+        const response = await fetch('/api/sentiment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-recaptcha-token': recaptchaToken,
+          },
+          body: JSON.stringify({ text }),
+        });
+
+        const remaining = response.headers.get('ratelimit-remaining');
+        if (remaining !== null) {
+          setRequestsRemaining(parseInt(remaining, 10));
+        }
+
+        const data = await response.json();
+
+        if (data.sentiment?.sentiment && typeof data.sentiment?.score === 'number') {
+          setResult({ sentiment: data.sentiment.sentiment, score: data.sentiment.score });
+          setLastAnalyzedText(text);
+        } else {
+          setError('Invalid response from server.');
+          console.warn('Raw sentiment response:', data);
+        }
+
+        setLoading(false);
       });
-
-      const remaining = response.headers.get('ratelimit-remaining');
-      if (remaining !== null) {
-        setRequestsRemaining(parseInt(remaining, 10));
-      }
-
-      const data = await response.json();
-
-      if (data.sentiment?.sentiment && typeof data.sentiment?.score === 'number') {
-        setResult({ sentiment: data.sentiment.sentiment, score: data.sentiment.score });
-        setLastAnalyzedText(text);
-      } else {
-        setError('Invalid response from server.');
-        console.warn('Raw sentiment response:', data);
-      }
     } catch (err) {
       console.error('Request failed:', err);
       setError('Something went wrong. Please try again.');
-    } finally {
       setLoading(false);
     }
   };

@@ -14,7 +14,7 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
   // ✅ Generate a unique ID per instance
-  const uniqueId = useRef(`file-upload-${Math.random().toString(36).substr(2, 9)}`).current;
+  const uniqueId = useRef(`file-upload-${Math.random().toString(36).slice(2, 11)}`).current;
 
   const validateJsonFile = (file: File): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -53,7 +53,12 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
     onUploadStart();
 
     try {
-      const isJsonUpload = acceptedTypes.includes('.json'); // ✅ Check acceptedTypes
+      const isJsonUpload = acceptedTypes.includes('.json');
+
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+      if (!fileExtension || !acceptedTypes.includes(`.${fileExtension}`)) {
+        throw new Error(`Unsupported file type: .${fileExtension}`);
+      }
 
       if (isJsonUpload) {
         await validateJsonFile(file);
@@ -79,17 +84,16 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
       console.error('Upload error:', err);
       onError(err.message);
     }
-    // clear input
-    // finally {
-    //   if (inputRef.current) {
-    //     inputRef.current.value = '';
-    //   }
-    // }
+    finally {
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
+    }
   };
 
   return (
     <div className="upload-input">
-      <label className="upload-label" htmlFor="file-upload">
+      <label className="upload-label" htmlFor={uniqueId}>
         <p>{label}</p>
         <input
           id={uniqueId}

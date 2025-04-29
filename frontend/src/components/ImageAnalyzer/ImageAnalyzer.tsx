@@ -1,9 +1,8 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { useRequestCounter } from '../../context/RequestCounterContext';
 import { useRecaptchaReady } from '../../helpers/RecaptchaProvider';
+import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 import './image-analyzer.scss';
-
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
 const ImageAnalyzer = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -11,9 +10,8 @@ const ImageAnalyzer = () => {
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
-
   const recaptchaReady = useRecaptchaReady();
+  const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,13 +21,13 @@ const ImageAnalyzer = () => {
       return;
     }
 
-    if (requestsRemaining === 0) {
-      setError('Request limit reached.');
+    if (!recaptchaReady) {
+      setError('reCAPTCHA not ready. Please wait a moment.');
       return;
     }
 
-    if (!recaptchaReady) {
-      setError('reCAPTCHA not ready. Please wait a moment.');
+    if (requestsRemaining === 0) {
+      setError('Request limit reached.');
       return;
     }
 
@@ -38,34 +36,34 @@ const ImageAnalyzer = () => {
     setResult('');
 
     try {
-      const recaptchaToken = await window.grecaptcha.execute(
-        RECAPTCHA_SITE_KEY,
-        { action: 'analyze_image' }
-      );
+      // Wrap execute call in grecaptcha.ready
+      window.grecaptcha.ready(async () => {
+        const recaptchaToken = await getRecaptchaToken('analyze_text');
 
-      const formData = new FormData();
-      formData.append('image', image);
-      formData.append('prompt', prompt.trim());
-      formData.append('recaptchaToken', recaptchaToken);
+        const formData = new FormData();
+        formData.append('image', image);
+        formData.append('prompt', prompt.trim());
+        formData.append('recaptchaToken', recaptchaToken);
 
-      const res = await fetch('/api/analyze-image', {
-        method: 'POST',
-        body: formData,
+        const res = await fetch('/api/analyze-image', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const remaining = res.headers.get('ratelimit-remaining');
+        if (remaining !== null) {
+          setRequestsRemaining(parseInt(remaining, 10));
+        }
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error || 'Something went wrong.');
+          return;
+        }
+
+        setResult(data.response || 'No response received.');
       });
-
-      const remaining = res.headers.get('ratelimit-remaining');
-      if (remaining !== null) {
-        setRequestsRemaining(parseInt(remaining, 10));
-      }
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Something went wrong.');
-        return;
-      }
-
-      setResult(data.response || 'No response received.');
     } catch (err) {
       console.error('Error during analysis:', err);
       setError('Something went wrong while analyzing the image.');

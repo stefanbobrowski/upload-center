@@ -53,6 +53,7 @@ export default function ProductList() {
         }
       } catch {
         sessionStorage.removeItem('product-cache');
+        handleFetchProducts();
       }
     }
   }, []);

@@ -77,8 +77,9 @@
     top: 50%;
     transform: translateY(-50%);
     content: '';
-    height: 22px;
-    width: 22px;
+    height: 23px;
+    width: 23px;
+    border: 1px solid #333;
     border-radius: 50%;
     box-shadow: 0 1px 0 #333;
     background-color: var(--bg);
@@ -88,7 +89,6 @@
       height: 16px;
       width: 16px;
       left: 3px;
-
     }
   }
 }
