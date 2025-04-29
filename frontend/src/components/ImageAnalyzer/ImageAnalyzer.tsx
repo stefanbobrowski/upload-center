@@ -1,21 +1,37 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
+import { useRequestCounter } from '../../context/RequestCounterContext';
+import { useRecaptchaReady } from '../../helpers/RecaptchaProvider';
 import './image-analyzer.scss';
+
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
 const ImageAnalyzer = () => {
   const [image, setImage] = useState<File | null>(null);
-  const [prompt, setPrompt] = useState<string>('');
-  const [result, setResult] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
+  const [prompt, setPrompt] = useState('');
+  const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [requestsRemaining, setRequestsRemaining] = useState<number | null>(
-    null
-  );
+  const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
 
-
+  const recaptchaReady = useRecaptchaReady();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!image || !prompt) return;
+
+    if (!image || !prompt.trim()) {
+      setError('Image and prompt are required.');
+      return;
+    }
+
+    if (requestsRemaining === 0) {
+      setError('Request limit reached.');
+      return;
+    }
+
+    if (!recaptchaReady) {
+      setError('reCAPTCHA not ready. Please wait a moment.');
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -23,13 +39,13 @@ const ImageAnalyzer = () => {
 
     try {
       const recaptchaToken = await window.grecaptcha.execute(
-        import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+        RECAPTCHA_SITE_KEY,
         { action: 'analyze_image' }
       );
 
       const formData = new FormData();
       formData.append('image', image);
-      formData.append('prompt', prompt);
+      formData.append('prompt', prompt.trim());
       formData.append('recaptchaToken', recaptchaToken);
 
       const res = await fetch('/api/analyze-image', {
@@ -38,12 +54,6 @@ const ImageAnalyzer = () => {
       });
 
       const remaining = res.headers.get('ratelimit-remaining');
-      console.log('Rate limit remaining:', remaining); // ← debug
-
-      for (const [key, value] of res.headers.entries()) {
-        console.log(key + ': ' + value);
-      }
-
       if (remaining !== null) {
         setRequestsRemaining(parseInt(remaining, 10));
       }
@@ -71,45 +81,28 @@ const ImageAnalyzer = () => {
   };
 
   return (
-    <div className='image-analyzer example-container'>
-      <h3>Gemini AI - Image Analyzer</h3>
+    <div className="image-analyzer example-container">
+      <h3>Gemini Vision - Image Analyzer</h3>
       <form onSubmit={handleSubmit}>
-        <label>   <p>
-          Choose an image, provide a prompt, and let Vision AI take care of the
-          rest.
-        </p>
-          <input type='file' accept='image/*' onChange={handleFileChange} />
-        </label>
+        <p>Choose an image, provide a prompt, and let Vision AI take care of the rest.</p>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
         <br />
         <input
-          className='text-input'
-          type='text'
+          className="text-input"
+          type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder='Enter a prompt like "Is there a cat in this image?"'
         />
         <br />
         <button
-          type='submit'
-          disabled={
-            loading ||
-            !image ||
-            !prompt ||
-            !window.grecaptcha ||
-            requestsRemaining === 0
-          }
+          type="submit"
+          disabled={loading || !image || !prompt.trim() || requestsRemaining === 0}
         >
           {loading ? 'Analyzing...' : 'Analyze'}
         </button>
-        {requestsRemaining !== null && (
-          <div
-            className={`request-counter${requestsRemaining <= 0 ? ' depleted' : ''
-              }`}
-          >
-            Requests remaining: {requestsRemaining}
-          </div>
-        )}
-        {error && <div className='error-message'>{error}</div>}
+
+        {error && <div className="error-message">{error}</div>}
       </form>
 
       {result && (

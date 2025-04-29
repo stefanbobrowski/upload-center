@@ -1,24 +1,39 @@
 .sentiment-checker textarea {
   display: block;
   width: 100%;
-  margin-bottom: 1rem;
   padding: 0.5rem;
   background-color: var(--input-bg);
-  color: var(--input-text);
-  /* color: #222; */
   font-size: 1rem;
+  color: var(--input-text);
 }
 
 .error-message {
-  color: #e53e3e;
   margin-top: 1rem;
   font-weight: bold;
+  color: #e53e3e;
 }
 
 .sentiment-result {
-  background-color: var(--bg);
-  border: 2px solid var(--accent);
   padding: 1rem;
   margin-top: 1rem;
+  border: 2px solid var(--accent);
   border-radius: 6px;
+  background-color: var(--bg);
+}
+
+.input-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  margin-block: 0.25rem 0.7rem;
+}
+
+.char-counter {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.char-counter.warning {
+  color: #d9534f;
+  /* Red warning color */
 }

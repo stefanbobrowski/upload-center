@@ -1,11 +1,31 @@
 footer {
+  position: relative;
   margin-block-start: auto;
   box-shadow: 0 -15px 30px var(--light20);
   background-color: var(--header-footer-bg);
 
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--header-text-bg);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+    /* control image opacity */
+    z-index: 50;
+  }
+
+  &>* {
+    position: relative;
+    z-index: 100;
+  }
+
   & p {
+    position: relative;
     margin-inline: auto;
     text-align: center;
+    z-index: 100;
   }
 }
 

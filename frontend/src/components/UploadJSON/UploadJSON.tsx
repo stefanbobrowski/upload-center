@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import { UploadInput } from '../UploadInput/UploadInput';
+import { useRecaptchaReady } from '../../helpers/RecaptchaProvider'; // ← add this
 import './upload-json.scss';
+
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
 const UploadJSON = () => {
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle');
   const [uploadMessage, setUploadMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [queryResult, setQueryResult] = useState<any | null>(null);
+
+  const recaptchaReady = useRecaptchaReady();
 
   const handleUploadStart = () => {
     setUploadStatus('uploading');
@@ -20,11 +25,22 @@ const UploadJSON = () => {
     setUploadMessage('✅ Uploaded to Cloud Storage.\n📡 Sending to BigQuery...');
 
     try {
+      if (!recaptchaReady) {
+        throw new Error('reCAPTCHA not ready. Please wait.');
+      }
+
+      const recaptchaToken = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
+        action: 'upload_json',
+      });
+
       setUploadStatus('analyzing');
 
       const res = await fetch('/api/upload-json', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-recaptcha-token': recaptchaToken,
+        },
         body: JSON.stringify({ gcsUrl: url }),
       });
 
@@ -55,12 +71,12 @@ const UploadJSON = () => {
 
   return (
     <section className="upload-json example-container">
-      <h3>Cloud Storage - Upload JSON File for BigQuery</h3>
+      <h3>BigQuery - JSONL Analysis</h3>
 
       <UploadInput
         acceptedTypes={['.json']}
         storagePath="uploads/json/"
-        label="Upload JSON File"
+        label="Upload JSON/JSONL File to Cloud Storage for BigQuery Analysis"
         onUploadStart={handleUploadStart}
         onUploadSuccess={handleUploadSuccess}
         onError={handleUploadError}
@@ -77,7 +93,6 @@ const UploadJSON = () => {
           <p className="error">{errorMessage}</p>
         )}
       </div>
-
 
       {queryResult && (
         <div className="result">
@@ -117,7 +132,6 @@ const UploadJSON = () => {
           )}
         </div>
       )}
-
     </section>
   );
 };

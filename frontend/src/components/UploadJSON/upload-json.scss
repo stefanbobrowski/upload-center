@@ -1,46 +1,14 @@
 .upload-json {
-    .status-box {
-        margin-top: 1rem;
+  .dot-anim::after {
+    content: '.';
+    animation: dots 1.2s steps(3, end) infinite;
+  }
+
+  .result {
+    margin-top: 1rem;
+
+    table {
+      width: 100%;
     }
-
-    .success {
-        color: green;
-        font-weight: bold;
-    }
-
-    .error {
-        color: red;
-        font-weight: bold;
-    }
-
-    .dot-anim::after {
-        content: '.';
-        animation: dots 1.2s steps(3, end) infinite;
-    }
-
-    @keyframes dots {
-        0% {
-            content: '.';
-        }
-
-        33% {
-            content: '..';
-        }
-
-        66% {
-            content: '...';
-        }
-
-        100% {
-            content: '.';
-        }
-    }
-
-    .result {
-        margin-top: 1rem;
-
-        table {
-            width: 100%;
-        }
-    }
+  }
 }

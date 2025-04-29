@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 
 type UploadInputProps = {
   acceptedTypes: string[];
@@ -11,58 +11,56 @@ type UploadInputProps = {
 
 export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, onUploadSuccess, onError }: UploadInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
   // ✅ Generate a unique ID per instance
   const uniqueId = useRef(`file-upload-${Math.random().toString(36).substr(2, 9)}`).current;
 
-  const validateAndPrepareFile = (file: File): Promise<File> => {
+  const validateJsonFile = (file: File): Promise<void> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (event) => {
         try {
           const content = event.target?.result as string;
-
-          if (content.trim().startsWith('[')) {
-            // Regular JSON array detected
-            const parsed = JSON.parse(content);
-            if (!Array.isArray(parsed)) {
-              throw new Error('Expected a JSON array.');
-            }
-
-            // Convert to NDJSON (newline-delimited JSON)
-            const ndjson = parsed.map((obj: any) => JSON.stringify(obj)).join('\n');
-            const blob = new Blob([ndjson], { type: 'application/json' });
-            const convertedFile = new File([blob], file.name, { type: 'application/json' });
-
-            resolve(convertedFile);
-          } else {
-            // Newline-delimited JSON detected
-            const lines = content.split('\n').filter(Boolean);
-            for (const line of lines) {
-              JSON.parse(line); // Will throw if not valid
-            }
-            resolve(file); // No need to modify
+          if (!content.trim()) {
+            throw new Error('File is empty.');
           }
+          if (content.trim().startsWith('[')) {
+            // JSON array
+            JSON.parse(content);
+          } else {
+            // JSONL format
+            const lines = content.split('\n').filter(Boolean);
+            lines.forEach(line => JSON.parse(line));
+          }
+          resolve();
         } catch (err: any) {
-          reject(new Error('Invalid JSON format: ' + err.message));
+          reject(new Error('Invalid JSON/JSONL format: ' + err.message));
         }
       };
-      reader.onerror = () => reject(new Error('Error reading file'));
+      reader.onerror = () => reject(new Error('Error reading file.'));
       reader.readAsText(file);
     });
   };
+
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setSelectedFileName(file.name);
+
     onUploadStart();
 
     try {
-      const validatedFile = await validateAndPrepareFile(file);
+      const isJsonUpload = acceptedTypes.includes('.json'); // ✅ Check acceptedTypes
+
+      if (isJsonUpload) {
+        await validateJsonFile(file);
+      }
 
       const formData = new FormData();
-      formData.append('file', validatedFile);
+      formData.append('file', file);
       formData.append('path', storagePath);
 
       const res = await fetch('/api/upload-file', {
@@ -80,11 +78,13 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
     } catch (err: any) {
       console.error('Upload error:', err);
       onError(err.message);
-    } finally {
-      if (inputRef.current) {
-        inputRef.current.value = '';
-      }
     }
+    // clear input
+    // finally {
+    //   if (inputRef.current) {
+    //     inputRef.current.value = '';
+    //   }
+    // }
   };
 
   return (
@@ -100,7 +100,9 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
           hidden
         />
       </label>
-
+      {selectedFileName && (
+        <p className="filename-display">{selectedFileName}</p>
+      )}
     </div>
   );
 };

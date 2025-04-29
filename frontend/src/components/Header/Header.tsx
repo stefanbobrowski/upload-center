@@ -44,7 +44,7 @@ const Header = () => {
             Examples
           </NavLink>
         </nav>
-        <div className='theme-toggle'>
+        {/* <div className='theme-toggle'>
           <span>Light</span>
           <label className='switch'>
             <input
@@ -55,6 +55,9 @@ const Header = () => {
             <span className='slider'></span>
           </label>
           <span>Dark</span>
+        </div> */}
+        <div>
+
         </div>
       </div>
     </header>

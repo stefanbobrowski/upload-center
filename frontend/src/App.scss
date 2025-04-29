@@ -62,3 +62,45 @@ footer nav a {
 pre {
   white-space: pre-wrap;
 }
+
+.input-note {
+  display: block;
+  text-align: right;
+  font-size: 0.8rem;
+  color: #808080;
+}
+
+.status-box {
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.success {
+  color: green;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+.result {}
+
+@keyframes dots {
+  0% {
+    content: '.';
+  }
+
+  33% {
+    content: '..';
+  }
+
+  66% {
+    content: '...';
+  }
+
+  100% {
+    content: '.';
+  }
+}

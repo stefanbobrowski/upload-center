@@ -6,20 +6,26 @@ import Home from './pages/Home/Home';
 import Examples from './pages/Examples/Examples';
 import Terms from './pages/Terms/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
+import { RecaptchaProvider } from './helpers/RecaptchaProvider';
+import { RequestCounterProvider } from './context/RequestCounterContext';
+import FixedControls from './components/FixedControls/FixedControls';
 
 
 function App() {
   return (
-    <>
-      <Header />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/examples' element={<Examples />} />
-        <Route path='/terms' element={<Terms />} />
-        <Route path='/privacy' element={<PrivacyPolicy />} />
-      </Routes>
-      <Footer />
-    </>
+    <RequestCounterProvider>
+      <RecaptchaProvider>
+        <Header />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/examples' element={<Examples />} />
+          <Route path='/terms' element={<Terms />} />
+          <Route path='/privacy' element={<PrivacyPolicy />} />
+        </Routes>
+        <FixedControls />
+        <Footer />
+      </RecaptchaProvider>
+    </RequestCounterProvider>
   );
 }
 

@@ -1,16 +1,13 @@
 const express = require('express');
 const axios = require('axios');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { verifyRecaptcha } = require('../helpers/verifyRecaptcha');
 
 const router = express.Router();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 router.post('/', async (req, res) => {
-  console.log(
-    `[SENTIMENT] IP: ${req.ip}, UA: ${req.get(
-      'user-agent'
-    )}, Time: ${new Date().toISOString()}`
-  );
+  console.log(`[SENTIMENT] IP: ${req.ip}, UA: ${req.get('user-agent')}, Time: ${new Date().toISOString()}`);
 
   const { text } = req.body;
   const recaptchaToken = req.headers['x-recaptcha-token'];
@@ -20,38 +17,39 @@ router.post('/', async (req, res) => {
   }
 
   if (!recaptchaToken) {
-    return res.status(400).json({ error: 'Missing reCAPTCHA token' });
+    return res.status(400).json({ error: 'Missing reCAPTCHA token.' });
   }
 
+  // ✅ reCAPTCHA verification
   try {
-    // ✅ Verify reCAPTCHA v3
-    const verifyRes = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify`,
-      null,
-      {
-        params: {
-          secret: process.env.RECAPTCHA_SECRET_KEY,
-          response: recaptchaToken,
-        },
-      }
-    );
+    const recaptchaResult = await verifyRecaptcha(recaptchaToken);
 
-    const { success, score } = verifyRes.data;
-    console.log(`[reCAPTCHA] Score: ${score}, Success: ${success}`);
+    const score = recaptchaResult.score ?? 0;
+    const success = recaptchaResult.success === true;
 
     if (!success || score < 0.5) {
-      return res.status(403).json({ error: 'Failed reCAPTCHA verification' });
+      console.warn('⚠️ reCAPTCHA verification failed', {
+        ip: req.ip,
+        score,
+        success,
+      });
+      return res.status(403).json({ error: 'reCAPTCHA verification failed.' });
     }
+  } catch (err) {
+    console.error('Error verifying reCAPTCHA:', err);
+    return res.status(500).json({ error: 'Failed to verify reCAPTCHA.' });
+  }
 
-    // ✅ Analyze with Gemini
+  // ✅ Analyze with Gemini
+  try {
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
 
     const prompt = `
-Analyze the sentiment of the following text and return only this JSON format:
-{ "sentiment": "positive", "score": 0.92 }
+      Analyze the sentiment of the following text and return only this JSON format:
+      { "sentiment": "positive", "score": 0.92 }
 
-Text: "${text}"
-`;
+      Text: "${text}"
+      `;
 
     const result = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -64,8 +62,9 @@ Text: "${text}"
     res.json({ sentiment: parsed });
   } catch (err) {
     console.error('Gemini Sentiment Error:', err);
+
     if (!res.headersSent) {
-      res.status(500).json({ error: 'Sentiment analysis failed' });
+      res.status(500).json({ error: 'Sentiment analysis failed.' });
     }
   }
 });

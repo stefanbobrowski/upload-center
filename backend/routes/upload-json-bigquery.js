@@ -3,6 +3,7 @@ const express = require('express');
 const { BigQuery } = require('@google-cloud/bigquery');
 const { Storage } = require('@google-cloud/storage');
 const rateLimit = require('express-rate-limit');
+const { verifyRecaptcha } = require('../helpers/verifyRecaptcha');
 
 const router = express.Router();
 const bigquery = new BigQuery();
@@ -23,12 +24,37 @@ const bigQueryLimiter = rateLimit({
 
 router.post('/', bigQueryLimiter, async (req, res) => {
     const { gcsUrl } = req.body;
+    const recaptchaToken = req.headers['x-recaptcha-token'];
 
     if (!gcsUrl) {
         return res.status(400).json({ error: 'Missing GCS URL' });
     }
 
+    if (!recaptchaToken) {
+        return res.status(400).json({ error: 'Missing reCAPTCHA token.' });
+    }
+
     console.log(`BigQuery load attempt from IP: ${req.ip}`);
+
+    // ✅ reCAPTCHA verification
+    try {
+        const recaptchaResult = await verifyRecaptcha(recaptchaToken);
+
+        const score = recaptchaResult.score ?? 0;
+        const success = recaptchaResult.success === true;
+
+        if (!success || score < 0.5) {
+            console.warn('⚠️ reCAPTCHA verification failed', {
+                ip: req.ip,
+                score,
+                success,
+            });
+            return res.status(403).json({ error: 'reCAPTCHA verification failed.' });
+        }
+    } catch (err) {
+        console.error('Error verifying reCAPTCHA:', err);
+        return res.status(500).json({ error: 'Failed to verify reCAPTCHA.' });
+    }
 
     try {
         const filename = decodeURIComponent(gcsUrl.split('/').pop());

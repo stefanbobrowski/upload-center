@@ -162,3 +162,7 @@ td {
   border-collapse: collapse;
   padding: 7px 10px;
 }
+
+.grecaptcha-badge {
+  z-index: 100;
+}

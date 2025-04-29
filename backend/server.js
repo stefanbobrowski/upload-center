@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const pool = require('./db');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -10,6 +9,7 @@ const analyzeImageRoute = require('./routes/analyze-image');
 const uploadFileRoute = require('./routes/upload-file');
 const analyzeTextRoute = require('./routes/analyze-text');
 const uploadJSONRoute = require('./routes/upload-json-bigquery');
+const productsRoute = require('./routes/products');
 
 const app = express();
 
@@ -38,76 +38,39 @@ app.use(
   })
 );
 
-// ✅ Organized rate limiters (slower: 5 per hour)
-const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
-
-const productLimiter = rateLimit({
+// ✅ Global rate limiter (5 requests/hour across ALL APIs)
+const oneHour = 60 * 60 * 1000;
+const globalLimiter = rateLimit({
   windowMs: oneHour,
   max: 5,
-  message: 'Too many product requests, please try again in an hour.',
+  message: 'Too many requests, please try again in an hour.',
   standardHeaders: true,
   legacyHeaders: false,
 });
+app.use('/api/', globalLimiter);
 
-const sentimentLimiter = rateLimit({
-  windowMs: oneHour,
-  max: 5,
-  message: 'Too many sentiment analysis requests, please try again in an hour.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-const analyzeImageLimiter = rateLimit({
-  windowMs: oneHour,
-  max: 5,
-  message: 'Too many image analysis requests, please try again in an hour.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-const analyzeTextLimiter = rateLimit({
-  windowMs: oneHour,
-  max: 5,
-  message: 'Too many text analysis requests, please try again in an hour.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-const uploadLimiter = rateLimit({
-  windowMs: oneHour,
-  max: 5,
-  message: 'Too many uploads, please try again in an hour.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// Example limiter for specific routes
+// const sentimentLimiter = rateLimit({
+//   windowMs: oneHour,
+//   max: 5,
+//   message: 'Too many sentiment analysis requests, please try again in an hour.',
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
+// app.use('/api/sentiment', sentimentLimiter, sentimentRoute);
 
 // ✅ API Routes
+app.use('/api/products', productsRoute);
+app.use('/api/sentiment', sentimentRoute);
+app.use('/api/analyze-image', analyzeImageRoute);
+app.use('/api/analyze-text', analyzeTextRoute);
+app.use('/api/upload-file', uploadFileRoute);
+app.use('/api/upload-json', uploadJSONRoute);
 
-// Products (Cloud SQL)
-app.get('/api/products', productLimiter, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM products');
-    res.json(result.rows);
-  } catch (err) {
-    console.error('🔴 DB ERROR:', { message: err.message, stack: err.stack });
-    res.status(500).json({ error: 'Database query failed' });
-  }
+app.get('/api/rate-limit-status', (req, res) => {
+  const remaining = req.rateLimit?.remaining ?? 0;
+  res.json({ requestsRemaining: remaining });
 });
-
-// Sentiment Analysis (Vertex AI)
-app.use('/api/sentiment', sentimentLimiter, sentimentRoute);
-
-// Image Analysis (Vertex AI)
-app.use('/api/analyze-image', analyzeImageLimiter, analyzeImageRoute);
-
-// Text Analysis (Vertex AI)
-app.use('/api/analyze-text', analyzeTextLimiter, analyzeTextRoute);
-
-// Upload file to GCS
-app.use('/api/upload-file', uploadLimiter, uploadFileRoute);
-
-// Upload JSON + BigQuery analysis
-app.use('/api/upload-json', uploadLimiter, uploadJSONRoute);
 
 // ✅ Health check
 app.get('/health', (req, res) => {
@@ -122,7 +85,7 @@ app.use(
   })
 );
 
-// ✅ Catch-all route for frontend SPA
+// ✅ Catch-all route for frontend
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api/')) return next();
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));

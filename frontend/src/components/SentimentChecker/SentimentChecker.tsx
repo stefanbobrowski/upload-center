@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
+import { useRequestCounter } from '../../context/RequestCounterContext';
+import { useRecaptchaReady } from '../../helpers/RecaptchaProvider';
 import './sentiment-checker.scss';
 
 interface SentimentResult {
@@ -15,24 +17,20 @@ declare global {
   }
 }
 
-const RECAPTCHA_SITE_KEY = '6LeGJwIrAAAAAB0bVze42uHwybeLsHD79rLf4J0t';
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
+const MAX_LENGTH = 250;
+const WARNING_THRESHOLD = 200;
+
 
 export default function SentimentChecker() {
   const [text, setText] = useState('');
   const [result, setResult] = useState<SentimentResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [lastAnalyzedText, setLastAnalyzedText] = useState('');
-  const [requestsRemaining, setRequestsRemaining] = useState<number | null>(
-    null
-  );
   const [loading, setLoading] = useState(false);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    if (window.grecaptcha) {
-      window.grecaptcha.ready(() => { });
-    }
-  }, []);
+  const recaptchaReady = useRecaptchaReady();
+  const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
 
   const analyze = async () => {
     setError(null);
@@ -40,6 +38,11 @@ export default function SentimentChecker() {
 
     if (!text.trim()) {
       setError('Please enter some text.');
+      return;
+    }
+
+    if (text.length > MAX_LENGTH) {
+      setError('Text too long. Please shorten your input.');
       return;
     }
 
@@ -53,12 +56,15 @@ export default function SentimentChecker() {
       return;
     }
 
+    if (!recaptchaReady) {
+      setError('reCAPTCHA not ready. Please wait.');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
-        action: 'analyze',
-      });
+      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'analyze' });
 
       const response = await fetch('/api/sentiment', {
         method: 'POST',
@@ -76,14 +82,8 @@ export default function SentimentChecker() {
 
       const data = await response.json();
 
-      if (
-        data.sentiment?.sentiment &&
-        typeof data.sentiment?.score === 'number'
-      ) {
-        setResult({
-          sentiment: data.sentiment.sentiment,
-          score: data.sentiment.score,
-        });
+      if (data.sentiment?.sentiment && typeof data.sentiment?.score === 'number') {
+        setResult({ sentiment: data.sentiment.sentiment, score: data.sentiment.score });
         setLastAnalyzedText(text);
       } else {
         setError('Invalid response from server.');
@@ -106,38 +106,42 @@ export default function SentimentChecker() {
   };
 
   return (
-    <div className='sentiment-checker example-container'>
+    <div className="sentiment-checker example-container">
       <h3>Gemini AI - Sentiment Analysis</h3>
-      <p>Accepts text and JSON.</p>
+      <p>Type a sentiment expressing your opinion or feeling.</p>
+
       <textarea
         rows={5}
-        placeholder='Enter a sentiment here like "I love this product. Will buy again."'
+        maxLength={MAX_LENGTH}
+        placeholder='Example: "I absolutely loved this product! Great price and quality."'
         value={text}
         onChange={handleChange}
       />
+
+      <div className="input-footer">
+        <small className={`char-counter${text.length >= WARNING_THRESHOLD ? ' warning' : ''}`}>
+          {text.length}/{MAX_LENGTH} characters
+        </small>
+        <small className="input-note">* Accepts plain text and JSON inputs.</small>
+      </div>
+
       <button
         onClick={analyze}
-        disabled={!text || requestsRemaining === 0 || loading}
+        disabled={!text.trim() || text.length > MAX_LENGTH || requestsRemaining === 0 || loading}
       >
         {loading ? 'Analyzing...' : 'Analyze'}
       </button>
 
-      {requestsRemaining !== null && (
-        <div
-          className={`request-counter${requestsRemaining <= 0 ? ' depleted' : ''
-            }`}
-        >
-          Requests remaining: {requestsRemaining}
-        </div>
-      )}
-
-      {error && <div className='error-message'>{error}</div>}
+      {error && <div className="error-message">{error}</div>}
 
       {result && (
-        <div className='sentiment-result'>
-          <strong>Sentiment:</strong> {result.sentiment} <br />
-          <strong>Score:</strong> {result.score}
-        </div>
+        <>
+          <div className="sentiment-result">
+            <strong>Sentiment:</strong> {result.sentiment} <br />
+            <strong>Score:</strong> {result.score}
+          </div>
+          <small style={{ display: 'block', marginTop: '0.5rem', marginLeft: '0.1rem' }}>A higher score means a stronger feeling. Scores close to 1 or more are strong. </small>
+        </>
       )}
     </div>
   );
