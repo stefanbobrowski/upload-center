@@ -5,7 +5,7 @@ const Home = () => {
     <main>
       <h1>Upload Center 🌆</h1>
       <p>
-        Welcome to my Cloud Playground!
+        Welcome to Cloud Playground ☁️ - Upload Center 🌆!
       </p>
 
       <p>

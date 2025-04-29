@@ -75,6 +75,7 @@ body {
 }
 
 p {
+  font-size: 1.11rem;
   max-width: 600px;
   margin-block: 1rem;
 }
@@ -146,7 +147,7 @@ table {
   background-color: var(--header-footer-bg);
 
   th {
-    background-color: var(--accent);
+    background-color: var(--light);
   }
 
   tr:nth-of-type(odd) {
@@ -161,6 +162,11 @@ td {
   border: 1px solid #333;
   border-collapse: collapse;
   padding: 7px 10px;
+}
+
+img {
+  display: block;
+  width: 100%;
 }
 
 .grecaptcha-badge {

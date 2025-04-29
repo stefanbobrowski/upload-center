@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useRequestCounter } from '../../context/RequestCounterContext';
 import './fixed-controls.scss';
 
 const FixedControls = () => {
@@ -10,7 +9,6 @@ const FixedControls = () => {
     return prefersDark;
   });
 
-  const { requestsRemaining } = useRequestCounter();
 
   useEffect(() => {
     const theme = darkMode ? 'dark' : 'light';
@@ -31,10 +29,6 @@ const FixedControls = () => {
           <span className="slider"></span>
         </label>
         <span>Dark</span>
-      </div>
-
-      <div className="rate-limit-counter">
-        Requests Remaining: {requestsRemaining}/5
       </div>
     </div>
   );

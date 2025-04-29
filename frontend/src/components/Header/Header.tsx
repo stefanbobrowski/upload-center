@@ -1,30 +1,31 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import cloudImg from '../../assets/cloud.png';
 import './header.scss';
 
 const Header = () => {
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    const stored = localStorage.getItem('theme');
-    if (stored) return stored === 'dark';
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return prefersDark;
-  });
+  // const [darkMode, setDarkMode] = useState<boolean>(() => {
+  //   const stored = localStorage.getItem('theme');
+  //   if (stored) return stored === 'dark';
+  //   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  //   return prefersDark;
+  // });
 
-  useEffect(() => {
-    const theme = darkMode ? 'dark' : 'light';
-    document.documentElement.setAttribute('theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [darkMode]);
+  // useEffect(() => {
+  //   const theme = darkMode ? 'dark' : 'light';
+  //   document.documentElement.setAttribute('theme', theme);
+  //   localStorage.setItem('theme', theme);
+  // }, [darkMode]);
 
-  const handleToggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
-  };
+  // const handleToggleDarkMode = () => {
+  //   setDarkMode((prev) => !prev);
+  // };
 
   return (
     <header>
       <div className='header-inner-container'>
         <Link to='/' className='logo-home-link'>
-          <h1>Cloud Playground</h1>
+          <h1><i>☁️</i>Cloud Playground</h1>
         </Link>
         <nav>
           <NavLink

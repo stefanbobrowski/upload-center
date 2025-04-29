@@ -39,7 +39,7 @@ const Footer = () => {
             Terms of Service
           </NavLink>
         </nav>
-        <p>&copy; 2025 Stefan Bobrowski • Stefan Cloud Playground.</p>
+        <p>&copy; 2025 Stefan Bobrowski • Cloud Playground - Upload Center.</p>
       </div>
     </footer>
   );

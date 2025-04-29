@@ -1,0 +1,41 @@
+.cloud-counter {
+  position: sticky;
+  top: 4rem;
+  flex: 1 1 auto;
+  width: 100%;
+  height: fit-content;
+  margin-top: 4rem;
+
+  // max-width: 384px;
+  // height: 200px;
+  // aspect-ratio: 3/2;
+  // background: url('/cloud.png') top / contain no-repeat;
+
+  .cloud-icon {
+    position: relative;
+    font-size: 15rem;
+
+    .rate-limit-counter {
+      position: absolute;
+      top: 56%;
+      left: 50%;
+      transform: translate(-50%, -56%);
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin: auto;
+      padding: 0rem 0.1rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #ffd900;
+      text-shadow: 2px 2px 4px #000;
+      // background-color: rgba(255, 255, 255, 0.25);
+    }
+  }
+
+
+}

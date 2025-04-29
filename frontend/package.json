@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Frontend React application for Upload Center — file upload, analysis dashboard, and GCP integration demo.",
+  "description": "Frontend React application for Cloud Playground - Upload Center — file upload, analysis dashboard, and GCP integration demo.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -17,6 +17,7 @@
   "author": "Stefan Bobrowski",
   "license": "Apache-2.0",
   "dependencies": {
+    "axios": "1.9.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.0"

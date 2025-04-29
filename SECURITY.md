@@ -1,4 +1,4 @@
-# Security and Abuse Prevention - Upload Center Project
+# Security and Abuse Prevention - Cloud Playground - Upload Center Project
 
 This project integrates multiple security measures to protect cloud resources, API endpoints, and user interactions against abuse and misuse. These practices ensure resilience in both demo and production environments.
 

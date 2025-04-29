@@ -6,17 +6,6 @@
   top: 1.5rem;
   right: 2rem;
   z-index: 100;
-  // padding: 0.75rem 1rem;
-  // border-radius: 8px;
-  // align-items: center;
-  // gap: 0.5rem;
-
-
-  // top: 1rem;
-  // right: 1rem;
-
-  // background-color: rgba(0, 0, 0, 0.5);
-
 }
 
 .theme-toggle {
@@ -24,9 +13,8 @@
   padding: 0.5rem;
   border: none;
   border-radius: 8px;
-
   background-color: var(--bg);
-  box-shadow: 0 5px 0 #222;
+  box-shadow: 0 7px 0 #111;
   // box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
 
   outline: 1px solid #333;
@@ -72,12 +60,14 @@
   height: 0;
 }
 
-
 .slider {
   position: absolute;
   inset: 0;
+  border: 1px solid #333;
   border-radius: 30px;
-  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 7px 0 #111;
+
   background-color: var(--light);
   transition: left 0.2s, color 0.3s;
   cursor: pointer;
@@ -104,8 +94,6 @@
 }
 
 input:checked+.slider {
-  background-color: #444;
-
   &:before {
     transform: translateX(26px);
 
@@ -113,22 +101,4 @@ input:checked+.slider {
       transform: translateX(19.5px);
     }
   }
-}
-
-input:checked+.slider {
-  background-color: #2196F3;
-}
-
-// input:checked+.slider:before {
-//   transform: translateX(16px);
-// }
-
-.rate-limit-counter {
-  position: relative;
-  bottom: 0;
-  margin: auto;
-  text-transform: uppercase;
-  color: #a07e29;
-  font-size: 0.9rem;
-  font-weight: bold;
 }

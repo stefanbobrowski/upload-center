@@ -1,4 +1,4 @@
-# Upload Center 🌆
+# Cloud Playground ☁️ - Upload Center 🌆
 
 A full-stack web application for uploading, analyzing, and managing data using **Google Cloud Platform** services.
 Built for scalability, security, and modern DevOps workflows.
