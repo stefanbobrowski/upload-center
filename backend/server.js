@@ -10,7 +10,7 @@ const uploadFileRoute = require("./routes/upload-file");
 const analyzeTextRoute = require("./routes/analyze-text");
 const uploadJSONRoute = require("./routes/upload-json-bigquery");
 const productsRoute = require("./routes/products");
-const { MAX_REQUESTS_PER_HOUR } = require("../constants/rateLimits");
+const { MAX_REQUESTS_PER_HOUR } = require("./constants/rateLimits");
 
 const app = express();
 
