@@ -1,3 +1,5 @@
+const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
+
 export async function getRecaptchaToken(action: string): Promise<string> {
   return new Promise((resolve, reject) => {
     if (!window.grecaptcha) {
@@ -19,7 +21,6 @@ export async function getRecaptchaToken(action: string): Promise<string> {
           waited += pollIntervalMs;
         }
 
-        // If no clients exist after waiting, manually render a dummy invisible badge
         const clients = (window.grecaptcha as any)?.getClients?.();
         if (!clients || Object.keys(clients).length === 0) {
           console.warn('No reCAPTCHA clients found after waiting. Manually creating client.');
@@ -27,15 +28,12 @@ export async function getRecaptchaToken(action: string): Promise<string> {
           dummyContainer.style.display = 'none';
           document.body.appendChild(dummyContainer);
           (window.grecaptcha as any).render(dummyContainer, {
-            sitekey: import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+            sitekey: SITE_KEY,
             size: 'invisible',
           });
         }
 
-        // Now execute
-        const token = await window.grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, {
-          action,
-        });
+        const token = await window.grecaptcha.execute(SITE_KEY, { action });
         resolve(token);
       } catch (err) {
         reject(err);

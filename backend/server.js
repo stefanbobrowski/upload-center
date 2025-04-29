@@ -38,11 +38,11 @@ app.use(
   }),
 );
 
-// ✅ Global rate limiter (5 requests/hour across ALL APIs)
+// ✅ Global rate limiter (7 requests/hour across ALL APIs)
 const oneHour = 60 * 60 * 1000;
 const globalLimiter = rateLimit({
   windowMs: oneHour,
-  max: 5,
+  max: 7,
   message: "Too many requests, please try again in an hour.",
   standardHeaders: true,
   legacyHeaders: false,
