@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { UploadInput } from '../UploadInput/UploadInput';
 import { useRequestCounter } from '../../context/RequestCounterContext';
 import { useRecaptchaReady } from '../../helpers/RecaptchaProvider';
+import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 import './upload-text.scss';
-
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
 const UploadText = () => {
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
@@ -12,50 +11,53 @@ const UploadText = () => {
   const [uploadMessage, setUploadMessage] = useState('');
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
   const recaptchaReady = useRecaptchaReady();
+  const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
 
   const handleUploadSuccess = async (url: string) => {
     setUploadStatus('success');
     setUploadMessage('✅ Upload complete!');
     setAnalyzeStatus('starting');
 
+    if (!recaptchaReady) {
+      setErrorMessage('reCAPTCHA not ready. Please wait a moment.');
+      setAnalyzeStatus('error');
+      return;
+    }
+
+    if (requestsRemaining === 0) {
+      setErrorMessage('Request limit reached.');
+      setAnalyzeStatus('error');
+      return;
+    }
+
     try {
-      if (!recaptchaReady) {
-        throw new Error('reCAPTCHA not ready. Please wait.');
-      }
+      window.grecaptcha.ready(async () => {
+        const recaptchaToken = await getRecaptchaToken('analyze_text');
 
-      if (requestsRemaining === 0) {
-        throw new Error('Request limit reached.');
-      }
+        setAnalyzeStatus('processing');
 
-      const recaptchaToken = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
-        action: 'analyze_text',
+        const res = await fetch('/api/analyze-text', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-recaptcha-token': recaptchaToken,
+          },
+          body: JSON.stringify({ gcsUrl: url }),
+        });
+
+        const remaining = res.headers.get('ratelimit-remaining');
+        if (remaining !== null) {
+          setRequestsRemaining(parseInt(remaining, 10));
+        }
+
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Vertex AI analysis failed.');
+
+        setAnalysisResult(data.result || 'No result returned.');
+        setAnalyzeStatus('success');
       });
-
-      setAnalyzeStatus('processing');
-
-      const res = await fetch('/api/analyze-text', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-recaptcha-token': recaptchaToken,
-        },
-        body: JSON.stringify({ gcsUrl: url }),
-      });
-
-      const remaining = res.headers.get('ratelimit-remaining');
-      if (remaining !== null) {
-        setRequestsRemaining(parseInt(remaining, 10));
-      }
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || 'Vertex AI analysis failed.');
-
-      setAnalysisResult(data.result || 'No result returned.');
-      setAnalyzeStatus('success');
     } catch (err: any) {
       console.error('Analysis error:', err);
       setAnalyzeStatus('error');

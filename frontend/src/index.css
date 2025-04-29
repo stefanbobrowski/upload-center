@@ -79,9 +79,13 @@ body {
 }
 
 p {
-  font-size: 1.11rem;
+  font-size: 1rem;
   max-width: 680px;
   margin-block: 0.8rem;
+
+  @media (min-width: 1200px) {
+    font-size: 1.125rem;
+  }
 }
 
 ul {

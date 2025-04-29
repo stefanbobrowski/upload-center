@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { UploadInput } from '../UploadInput/UploadInput';
-import { useRecaptchaReady } from '../../helpers/RecaptchaProvider'; // ← add this
+import { useRequestCounter } from '../../context/RequestCounterContext';
+import { useRecaptchaReady } from '../../helpers/RecaptchaProvider';
+import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 import './upload-json.scss';
-
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
 const UploadJSON = () => {
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle');
   const [uploadMessage, setUploadMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [queryResult, setQueryResult] = useState<any | null>(null);
-
   const recaptchaReady = useRecaptchaReady();
+  const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
+
 
   const handleUploadStart = () => {
     setUploadStatus('uploading');
@@ -24,39 +25,50 @@ const UploadJSON = () => {
     setUploadStatus('uploading');
     setUploadMessage('✅ Uploaded to Cloud Storage.\n📡 Sending to BigQuery...');
 
+    if (!recaptchaReady) {
+      throw new Error('reCAPTCHA not ready. Please wait.');
+    }
+    if (requestsRemaining === 0) {
+      throw new Error('Request limit reached.');
+    }
+
     try {
-      if (!recaptchaReady) {
-        throw new Error('reCAPTCHA not ready. Please wait.');
-      }
 
-      const recaptchaToken = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
-        action: 'upload_json',
+      window.grecaptcha.ready(async () => {
+        const recaptchaToken = await getRecaptchaToken('analyze_text');
+
+        setUploadStatus('analyzing');
+
+        const res = await fetch('/api/upload-json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-recaptcha-token': recaptchaToken,
+          },
+          body: JSON.stringify({ gcsUrl: url }),
+        });
+
+        // ✅ Update rate limit right after fetch
+        const remaining = res.headers.get('ratelimit-remaining');
+        if (remaining !== null) {
+          setRequestsRemaining(parseInt(remaining, 10));
+        }
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Server responded with ${res.status}: ${errorText.slice(0, 100)}`);
+        }
+
+        const data = await res.json();
+
+        setUploadStatus('success');
+        setUploadMessage((prev) => prev + '\n✅ BigQuery analysis complete!');
+
+        if (data.summary) {
+          setQueryResult(data.summary);
+        }
+
       });
-
-      setUploadStatus('analyzing');
-
-      const res = await fetch('/api/upload-json', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-recaptcha-token': recaptchaToken,
-        },
-        body: JSON.stringify({ gcsUrl: url }),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Server responded with ${res.status}: ${errorText.slice(0, 100)}`);
-      }
-
-      const data = await res.json();
-
-      setUploadStatus('success');
-      setUploadMessage((prev) => prev + '\n✅ BigQuery analysis complete!');
-
-      if (data.summary) {
-        setQueryResult(data.summary);
-      }
     } catch (err: any) {
       console.error('BigQuery load error:', err);
       setUploadStatus('error');
