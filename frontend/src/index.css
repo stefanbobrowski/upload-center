@@ -92,7 +92,7 @@ ul {
   max-width: 680px;
 }
 
-ol>li {
+ol > li {
   padding-inline-start: 0.75rem;
 }
 
@@ -148,7 +148,6 @@ textarea {
   font-size: 1rem;
 }
 
-
 table {
   margin-block: 1rem;
   margin-inline: 0;
@@ -161,7 +160,6 @@ table {
   tr:nth-of-type(odd) {
     background-color: var(--bg);
   }
-
 }
 
 table,

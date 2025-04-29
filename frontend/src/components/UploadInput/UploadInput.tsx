@@ -9,7 +9,14 @@ type UploadInputProps = {
   onError: (error: string) => void;
 };
 
-export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, onUploadSuccess, onError }: UploadInputProps) => {
+export const UploadInput = ({
+  acceptedTypes,
+  storagePath,
+  label,
+  onUploadStart,
+  onUploadSuccess,
+  onError,
+}: UploadInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
@@ -31,7 +38,7 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
           } else {
             // JSONL format
             const lines = content.split('\n').filter(Boolean);
-            lines.forEach(line => JSON.parse(line));
+            lines.forEach((line) => JSON.parse(line));
           }
           resolve();
         } catch (err: any) {
@@ -42,7 +49,6 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
       reader.readAsText(file);
     });
   };
-
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -83,8 +89,7 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
     } catch (err: any) {
       console.error('Upload error:', err);
       onError(err.message);
-    }
-    finally {
+    } finally {
       if (inputRef.current) {
         inputRef.current.value = '';
       }
@@ -104,9 +109,7 @@ export const UploadInput = ({ acceptedTypes, storagePath, label, onUploadStart, 
           hidden
         />
       </label>
-      {selectedFileName && (
-        <p className="filename-display">{selectedFileName}</p>
-      )}
+      {selectedFileName && <p className="filename-display">{selectedFileName}</p>}
     </div>
   );
 };

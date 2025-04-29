@@ -12,7 +12,6 @@ const CloudCounter = () => {
         ? '#ffb84d' // orange
         : '#ffd93d'; // bright yellow
 
-
   return (
     <div className="cloud-counter">
       <div className="cloud-icon">

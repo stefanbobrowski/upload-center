@@ -6,8 +6,12 @@ import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 import './upload-text.scss';
 
 const UploadText = () => {
-  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
-  const [analyzeStatus, setAnalyzeStatus] = useState<'idle' | 'starting' | 'processing' | 'success' | 'error'>('idle');
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>(
+    'idle',
+  );
+  const [analyzeStatus, setAnalyzeStatus] = useState<
+    'idle' | 'starting' | 'processing' | 'success' | 'error'
+  >('idle');
   const [uploadMessage, setUploadMessage] = useState('');
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -89,12 +93,22 @@ const UploadText = () => {
       />
 
       <div className="status-box">
-        {uploadStatus === 'uploading' && <p>📤 Uploading<span className="dot-anim" /></p>}
+        {uploadStatus === 'uploading' && (
+          <p>
+            📤 Uploading
+            <span className="dot-anim" />
+          </p>
+        )}
         {uploadStatus === 'success' && <p className="success">{uploadMessage}</p>}
         {uploadStatus === 'error' && <p className="error">❌ Upload failed: {errorMessage}</p>}
 
         {analyzeStatus === 'starting' && <p>🧠 Starting Vertex AI Analysis...</p>}
-        {analyzeStatus === 'processing' && <p>🧠 Summarizing<span className="dot-anim" /></p>}
+        {analyzeStatus === 'processing' && (
+          <p>
+            🧠 Summarizing
+            <span className="dot-anim" />
+          </p>
+        )}
         {analyzeStatus === 'success' && (
           <>
             <p className="success">✅ Summary complete:</p>

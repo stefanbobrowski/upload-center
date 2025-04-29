@@ -10,17 +10,16 @@ import { RecaptchaProvider } from './helpers/RecaptchaProvider';
 import { RequestCounterProvider } from './context/RequestCounterContext';
 import FixedControls from './components/FixedControls/FixedControls';
 
-
 function App() {
   return (
     <RequestCounterProvider>
       <RecaptchaProvider>
         <Header />
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/examples' element={<Examples />} />
-          <Route path='/terms' element={<Terms />} />
-          <Route path='/privacy' element={<PrivacyPolicy />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/examples" element={<Examples />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
         </Routes>
         <FixedControls />
         <Footer />

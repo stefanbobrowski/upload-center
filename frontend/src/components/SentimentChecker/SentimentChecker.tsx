@@ -104,7 +104,7 @@ export default function SentimentChecker() {
     setText(newText);
 
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(() => { }, 500);
+    debounceTimer.current = setTimeout(() => {}, 500);
   };
 
   return (
@@ -142,7 +142,9 @@ export default function SentimentChecker() {
             <strong>Sentiment:</strong> {result.sentiment} <br />
             <strong>Score:</strong> {result.score}
           </div>
-          <small style={{ display: 'block', marginTop: '0.5rem', marginLeft: '0.1rem' }}>A higher score means a stronger feeling. Scores close to 1 or more are strong. </small>
+          <small style={{ display: 'block', marginTop: '0.5rem', marginLeft: '0.1rem' }}>
+            A higher score means a stronger feeling. Scores close to 1 or more are strong.{' '}
+          </small>
         </>
       )}
     </div>

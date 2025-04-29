@@ -6,13 +6,14 @@ import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 import './upload-json.scss';
 
 const UploadJSON = () => {
-  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle');
+  const [uploadStatus, setUploadStatus] = useState<
+    'idle' | 'uploading' | 'analyzing' | 'success' | 'error'
+  >('idle');
   const [uploadMessage, setUploadMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [queryResult, setQueryResult] = useState<any | null>(null);
   const recaptchaReady = useRecaptchaReady();
   const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
-
 
   const handleUploadStart = () => {
     setUploadStatus('uploading');
@@ -33,7 +34,6 @@ const UploadJSON = () => {
     }
 
     try {
-
       window.grecaptcha.ready(async () => {
         const recaptchaToken = await getRecaptchaToken('analyze_text');
 
@@ -67,7 +67,6 @@ const UploadJSON = () => {
         if (data.summary) {
           setQueryResult(data.summary);
         }
-
       });
     } catch (err: any) {
       console.error('BigQuery load error:', err);
@@ -96,14 +95,13 @@ const UploadJSON = () => {
 
       <div className="status-box">
         {(uploadStatus === 'uploading' || uploadStatus === 'analyzing') && (
-          <pre className="success">{uploadMessage}<span className="dot-anim" /></pre>
+          <pre className="success">
+            {uploadMessage}
+            <span className="dot-anim" />
+          </pre>
         )}
-        {uploadStatus === 'success' && (
-          <pre className="success">{uploadMessage}</pre>
-        )}
-        {uploadStatus === 'error' && (
-          <p className="error">{errorMessage}</p>
-        )}
+        {uploadStatus === 'success' && <pre className="success">{uploadMessage}</pre>}
+        {uploadStatus === 'error' && <p className="error">{errorMessage}</p>}
       </div>
 
       {queryResult && (
@@ -111,7 +109,9 @@ const UploadJSON = () => {
           <h4>📊 BigQuery Analysis Result:</h4>
 
           {queryResult.totalRows !== undefined && (
-            <p><strong>Total Rows Uploaded:</strong> {queryResult.totalRows}</p>
+            <p>
+              <strong>Total Rows Uploaded:</strong> {queryResult.totalRows}
+            </p>
           )}
 
           {queryResult.categorySummary && queryResult.categorySummary.length > 0 && (
@@ -136,11 +136,11 @@ const UploadJSON = () => {
             </div>
           )}
 
-          {!queryResult.categorySummary?.length && (
-            <p>No category breakdown available.</p>
-          )}
+          {!queryResult.categorySummary?.length && <p>No category breakdown available.</p>}
           {queryResult.averageScore !== undefined && (
-            <p><strong>Average Score:</strong> {queryResult.averageScore.toFixed(2)}</p>
+            <p>
+              <strong>Average Score:</strong> {queryResult.averageScore.toFixed(2)}
+            </p>
           )}
         </div>
       )}
