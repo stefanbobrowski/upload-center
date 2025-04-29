@@ -1,5 +1,9 @@
-// const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
-const SITE_KEY = '6LeGJwIrAAAAAB0bVze42uHwybeLsHD79rLf4J0t';
+const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
+
+if (!SITE_KEY) {
+  console.error('❌ No reCAPTCHA site key found! Check environment variables.');
+  throw new Error('No reCAPTCHA site key found.');
+}
 
 export async function getRecaptchaToken(action: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -9,7 +13,7 @@ export async function getRecaptchaToken(action: string): Promise<string> {
 
     window.grecaptcha.ready(async () => {
       try {
-        const maxWaitMs = 5000;
+        const maxWaitMs = 4000;
         const pollIntervalMs = 100;
         let waited = 0;
 
@@ -25,13 +29,19 @@ export async function getRecaptchaToken(action: string): Promise<string> {
         const clients = (window.grecaptcha as any)?.getClients?.();
         if (!clients || Object.keys(clients).length === 0) {
           console.warn('No reCAPTCHA clients found after waiting. Manually creating client.');
-          const dummyContainer = document.createElement('div');
-          dummyContainer.style.display = 'none';
-          document.body.appendChild(dummyContainer);
-          (window.grecaptcha as any).render(dummyContainer, {
-            sitekey: SITE_KEY,
-            size: 'invisible',
-          });
+
+          // Only create one dummy container
+          if (!document.getElementById('recaptcha-dummy')) {
+            const dummyContainer = document.createElement('div');
+            dummyContainer.id = 'recaptcha-dummy';
+            dummyContainer.style.display = 'none';
+            document.body.appendChild(dummyContainer);
+
+            (window.grecaptcha as any).render(dummyContainer, {
+              sitekey: SITE_KEY,
+              size: 'invisible',
+            });
+          }
         }
 
         const token = await window.grecaptcha.execute(SITE_KEY, { action });

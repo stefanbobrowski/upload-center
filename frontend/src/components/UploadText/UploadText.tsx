@@ -89,6 +89,7 @@ const UploadText = () => {
         onUploadSuccess={handleUploadSuccess}
         onError={handleUploadError}
       />
+      <p className="warning-text">⚡ Costs 2 requests (upload + analyze)</p>
 
       <div className="status-box">
         {uploadStatus === 'uploading' && (

@@ -1,8 +1,6 @@
 .cloud-counter {
-  position: sticky;
-  top: 4rem;
-  flex: 1 1 auto;
   width: 100%;
+  max-width: 250px;
   height: fit-content;
   margin-top: 4rem;
 
@@ -11,9 +9,28 @@
   // aspect-ratio: 3/2;
   // background: url('/cloud.png') top / contain no-repeat;
 
+  @media (max-width: 1000px) {
+    // position: relative;
+    // width: 200px;
+    // top: 0rem;
+    // right: 0rem;
+    // font-size: 8rem;
+  }
+
   .cloud-icon {
-    position: relative;
+    position: fixed;
+    width: 400px;
+    top: 2.5rem;
+    right: 0rem;
     font-size: 15rem;
+
+    @media (max-width: 1000px) {
+      // position: relative;
+      // width: 200px;
+      // top: 0rem;
+      // right: 0rem;
+      // font-size: 8rem;
+    }
 
     .rate-limit-counter {
       position: absolute;
@@ -34,6 +51,10 @@
       color: #ffd900;
       text-shadow: 2px 2px 4px #000;
       // background-color: rgba(255, 255, 255, 0.25);
+
+      @media (max-width: 900px) {
+        font-size: 1rem;
+      }
     }
   }
 }

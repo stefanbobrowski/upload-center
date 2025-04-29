@@ -2,8 +2,33 @@
   position: relative;
   display: flex;
 
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+  }
+
   .left-col {
-    flex: 0 0 auto;
+    flex: 0 1 auto;
+
+    @media (max-width: 600px) {
+      flex: 1;
+    }
+  }
+}
+
+.requests-remaining-text {
+  color: gold;
+}
+
+.examples-list {
+  @media (max-width: 500px) {
+    padding-inline-start: 0;
+    list-style-type: none;
+  }
+
+  li {
+    @media (max-width: 500px) {
+      padding-inline-start: 0;
+    }
   }
 }
 
@@ -16,6 +41,10 @@
   // border: 1px solid var(--accent);
   box-shadow: 2px 2px 7px var(--accent);
   color: var(--text);
+
+  @media (max-width: 600px) {
+    max-width: 100%;
+  }
 
   h3 {
     color: var(--accent);

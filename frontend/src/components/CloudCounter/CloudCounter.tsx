@@ -1,4 +1,5 @@
 import { useRequestCounter } from '../../context/RequestCounterContext';
+import { MAX_REQUESTS_PER_HOUR } from '../../constants/rateLimits';
 import cloudImg from '../../assets/cloud.png';
 import './cloud-counter.scss';
 
@@ -12,13 +13,15 @@ const CloudCounter = () => {
         ? '#ffb84d' // orange
         : '#ffd93d'; // bright yellow
 
+  const remainingText = requestsRemaining === null ? '?' : requestsRemaining;
+
   return (
     <div className="cloud-counter">
       <div className="cloud-icon">
         {/* ☁️ */}
         <img src={cloudImg}></img>
         <div className="rate-limit-counter" style={{ color: counterColor }}>
-          Requests Remaining: {requestsRemaining}/5
+          Requests: {remainingText}/{MAX_REQUESTS_PER_HOUR}
         </div>
       </div>
     </div>

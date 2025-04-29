@@ -36,34 +36,31 @@ const ImageAnalyzer = () => {
     setResult('');
 
     try {
-      // Wrap execute call in grecaptcha.ready
-      window.grecaptcha.ready(async () => {
-        const recaptchaToken = await getRecaptchaToken('analyze_text');
+      const recaptchaToken = await getRecaptchaToken('analyze_text');
 
-        const formData = new FormData();
-        formData.append('image', image);
-        formData.append('prompt', prompt.trim());
-        formData.append('recaptchaToken', recaptchaToken);
+      const formData = new FormData();
+      formData.append('image', image);
+      formData.append('prompt', prompt.trim());
+      formData.append('recaptchaToken', recaptchaToken);
 
-        const res = await fetch('/api/analyze-image', {
-          method: 'POST',
-          body: formData,
-        });
-
-        const remaining = res.headers.get('ratelimit-remaining');
-        if (remaining !== null) {
-          setRequestsRemaining(parseInt(remaining, 10));
-        }
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          setError(data.error || 'Something went wrong.');
-          return;
-        }
-
-        setResult(data.response || 'No response received.');
+      const res = await fetch('/api/analyze-image', {
+        method: 'POST',
+        body: formData,
       });
+
+      const remaining = res.headers.get('ratelimit-remaining');
+      if (remaining !== null) {
+        setRequestsRemaining(parseInt(remaining, 10));
+      }
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong.');
+        return;
+      }
+
+      setResult(data.response || 'No response received.');
     } catch (err) {
       console.error('Error during analysis:', err);
       setError('Something went wrong while analyzing the image.');
