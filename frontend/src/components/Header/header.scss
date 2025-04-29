@@ -34,8 +34,8 @@ header {
     color: var(--light);
     z-index: 100;
 
-    @media (max-width: 800px) {
-      font-size: 2.5rem;
+    @media (max-width: 900px) {
+      font-size: 2.25rem;
     }
 
     &:hover {

@@ -88,6 +88,11 @@ p {
   }
 }
 
+ol,
+ul {
+  padding-inline-start: 1rem;
+}
+
 ul {
   max-width: 680px;
 }

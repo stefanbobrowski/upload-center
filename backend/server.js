@@ -10,6 +10,7 @@ const uploadFileRoute = require("./routes/upload-file");
 const analyzeTextRoute = require("./routes/analyze-text");
 const uploadJSONRoute = require("./routes/upload-json-bigquery");
 const productsRoute = require("./routes/products");
+const { MAX_REQUESTS_PER_HOUR } = require("../constants/rateLimits");
 
 const app = express();
 
@@ -38,11 +39,11 @@ app.use(
   }),
 );
 
-// ✅ Global rate limiter (7 requests/hour across ALL APIs)
+// ✅ Global rate limiter (across ALL APIs)
 const oneHour = 60 * 60 * 1000;
 const globalLimiter = rateLimit({
   windowMs: oneHour,
-  max: 7,
+  max: MAX_REQUESTS_PER_HOUR,
   message: "Too many requests, please try again in an hour.",
   standardHeaders: true,
   legacyHeaders: false,
