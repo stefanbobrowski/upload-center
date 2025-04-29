@@ -34,40 +34,38 @@ const UploadJSON = () => {
     }
 
     try {
-      window.grecaptcha.ready(async () => {
-        const recaptchaToken = await getRecaptchaToken('analyze_text');
+      const recaptchaToken = await getRecaptchaToken('analyze_text');
 
-        setUploadStatus('analyzing');
+      setUploadStatus('analyzing');
 
-        const res = await fetch('/api/upload-json', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-recaptcha-token': recaptchaToken,
-          },
-          body: JSON.stringify({ gcsUrl: url }),
-        });
-
-        // ✅ Update rate limit right after fetch
-        const remaining = res.headers.get('ratelimit-remaining');
-        if (remaining !== null) {
-          setRequestsRemaining(parseInt(remaining, 10));
-        }
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(`Server responded with ${res.status}: ${errorText.slice(0, 100)}`);
-        }
-
-        const data = await res.json();
-
-        setUploadStatus('success');
-        setUploadMessage((prev) => prev + '\n✅ BigQuery analysis complete!');
-
-        if (data.summary) {
-          setQueryResult(data.summary);
-        }
+      const res = await fetch('/api/upload-json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-recaptcha-token': recaptchaToken,
+        },
+        body: JSON.stringify({ gcsUrl: url }),
       });
+
+      // ✅ Update rate limit right after fetch
+      const remaining = res.headers.get('ratelimit-remaining');
+      if (remaining !== null) {
+        setRequestsRemaining(parseInt(remaining, 10));
+      }
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Server responded with ${res.status}: ${errorText.slice(0, 100)}`);
+      }
+
+      const data = await res.json();
+
+      setUploadStatus('success');
+      setUploadMessage((prev) => prev + '\n✅ BigQuery analysis complete!');
+
+      if (data.summary) {
+        setQueryResult(data.summary);
+      }
     } catch (err: any) {
       console.error('BigQuery load error:', err);
       setUploadStatus('error');
