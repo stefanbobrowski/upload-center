@@ -7,20 +7,16 @@ const Home = () => {
       <p>
         Welcome to Cloud Playground ☁️ - Upload Center 🌆!
       </p>
-
       <p>
         Head straight to the <Link to="/examples">Examples</Link> to see it in action.
       </p>
-
       <p>
         This site is a hands-on demonstration of what I've been building while diving deeper into backend development,
         cloud infrastructure, and AI integrations — all powered by <strong>Google Cloud Platform (GCP)</strong>.
       </p>
-
       <p>
         It showcases a secure, scalable full-stack architecture using a modern GCP-first stack, including:
       </p>
-
       <ul>
         <li><strong>Cloud SQL (PostgreSQL)</strong> for structured database storage.</li>
         <li><strong>Cloud Run</strong> for hosting Dockerized backend APIs and delivering the entire web app.</li>
@@ -28,7 +24,7 @@ const Home = () => {
         <li><strong>BigQuery</strong> for large-scale data analysis on uploaded JSON files.</li>
         <li><strong>Vertex AI & Gemini AI</strong> for advanced text and image analysis.</li>
       </ul>
-
+      <br />
       <h2>Technology Stack Overview</h2>
       <table>
         <thead>

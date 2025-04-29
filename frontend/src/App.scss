@@ -87,6 +87,10 @@ pre {
 
 .result {}
 
+strong {
+  color: rgb(63, 153, 157);
+}
+
 @keyframes dots {
   0% {
     content: '.';

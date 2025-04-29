@@ -22,6 +22,10 @@ h1 {
   font-weight: 400;
 }
 
+h2 {
+  font-size: 2.25em;
+}
+
 :root {
   /* html tag */
   font-family: 'Rubik', sans-serif;
@@ -76,12 +80,12 @@ body {
 
 p {
   font-size: 1.11rem;
-  max-width: 600px;
-  margin-block: 1rem;
+  max-width: 680px;
+  margin-block: 0.8rem;
 }
 
 ul {
-  max-width: 600px;
+  max-width: 680px;
 }
 
 ol>li {

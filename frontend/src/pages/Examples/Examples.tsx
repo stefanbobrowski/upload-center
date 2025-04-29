@@ -13,9 +13,9 @@ const Examples = () => {
         <h1>Examples</h1>
         <p>A handful of <strong>Google Cloud Platform (GCP)</strong> examples.</p>
         <p>
-          Global Rate Limit set to <strong>5 requests per hour</strong>.
+          Global Rate Limit set to <strong>5 requests per hour</strong> (See cloud <i>☁️</i> to the right).
         </p>
-        <p>See <i>'Requests Remaining' Cloud</i> to the right <i>☁️</i>. 👉</p>
+        <br />
         <ol className='example-list' type="I">
           <li><ProductList /></li>
           <li><SentimentChecker /></li>
