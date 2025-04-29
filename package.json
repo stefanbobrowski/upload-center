@@ -1,0 +1,24 @@
+{
+  "name": "upload-center",
+  "version": "1.0.0",
+  "description": "A full-stack web application for uploading, analyzing, and managing data using **Google Cloud Platform** services.\r Built for scalability, security, and modern DevOps workflows.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefanbobrowski/upload-center.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stefanbobrowski/upload-center/issues"
+  },
+  "homepage": "https://github.com/stefanbobrowski/upload-center#readme",
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}

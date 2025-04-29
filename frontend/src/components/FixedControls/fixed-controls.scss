@@ -19,7 +19,6 @@
 
   outline: 1px solid #333;
 
-
   @media (max-width: 900px) {
     top: 1rem;
     right: 1rem;
@@ -27,7 +26,7 @@
     padding: 0.4rem;
   }
 
-  &>span {
+  & > span {
     text-transform: uppercase;
     font-size: 0.7rem;
     color: var(--text);
@@ -93,7 +92,7 @@
   }
 }
 
-input:checked+.slider {
+input:checked + .slider {
   &:before {
     transform: translate(24.5px, -50%);
 

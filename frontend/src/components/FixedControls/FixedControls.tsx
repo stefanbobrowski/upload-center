@@ -9,7 +9,6 @@ const FixedControls = () => {
     return prefersDark;
   });
 
-
   useEffect(() => {
     const theme = darkMode ? 'dark' : 'light';
     document.documentElement.setAttribute('theme', theme);
@@ -21,11 +20,7 @@ const FixedControls = () => {
       <div className="theme-toggle">
         <span>Light</span>
         <label className="switch">
-          <input
-            type="checkbox"
-            onChange={() => setDarkMode((prev) => !prev)}
-            checked={darkMode}
-          />
+          <input type="checkbox" onChange={() => setDarkMode((prev) => !prev)} checked={darkMode} />
           <span className="slider"></span>
         </label>
         <span>Dark</span>

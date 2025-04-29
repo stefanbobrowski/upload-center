@@ -1,7 +1,7 @@
-require('dotenv').config();
-const { Pool } = require('pg');
+require("dotenv").config();
+const { Pool } = require("pg");
 
-const isLocal = process.env.NODE_ENV !== 'production';
+const isLocal = process.env.NODE_ENV !== "production";
 
 const pool = new Pool({
   user: process.env.DB_USER,

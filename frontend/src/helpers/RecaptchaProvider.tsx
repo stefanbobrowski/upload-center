@@ -8,7 +8,9 @@ export const RecaptchaProvider = ({ children }: { children: React.ReactNode }) =
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const existingScript = document.querySelector('script[src^="https://www.google.com/recaptcha/api.js"]');
+    const existingScript = document.querySelector(
+      'script[src^="https://www.google.com/recaptcha/api.js"]',
+    );
     if (window.grecaptcha) {
       window.grecaptcha.ready(() => setReady(true));
       return;
@@ -27,9 +29,5 @@ export const RecaptchaProvider = ({ children }: { children: React.ReactNode }) =
     document.head.appendChild(script);
   }, []);
 
-  return (
-    <RecaptchaContext.Provider value={ready}>
-      {children}
-    </RecaptchaContext.Provider>
-  );
+  return <RecaptchaContext.Provider value={ready}>{children}</RecaptchaContext.Provider>;
 };

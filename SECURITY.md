@@ -8,14 +8,14 @@ This project integrates multiple security measures to protect cloud resources, A
 
 Each sensitive API route is individually protected with `express-rate-limit`, enforcing strict per-IP request limits:
 
-| Route | Limit | Window |
-|:------|:------|:-------|
-| `/api/products` | 5 requests | 1 hour |
-| `/api/sentiment` | 5 requests | 1 hour |
+| Route                | Limit      | Window |
+| :------------------- | :--------- | :----- |
+| `/api/products`      | 5 requests | 1 hour |
+| `/api/sentiment`     | 5 requests | 1 hour |
 | `/api/analyze-image` | 5 requests | 1 hour |
-| `/api/analyze-text` | 5 requests | 1 hour |
-| `/api/upload-file` | 5 uploads | 1 hour |
-| `/api/upload-json` | 5 uploads | 1 hour |
+| `/api/analyze-text`  | 5 requests | 1 hour |
+| `/api/upload-file`   | 5 uploads  | 1 hour |
+| `/api/upload-json`   | 5 uploads  | 1 hour |
 
 Each route has a custom error message to clearly communicate limits to users.
 
@@ -81,4 +81,3 @@ This project was built with a strong focus on real-world web security and best p
 These protections help safeguard against DDoS attempts, bot abuse, credential stuffing, and excessive resource usage — while keeping user experience smooth for legitimate users.
 
 ---
-

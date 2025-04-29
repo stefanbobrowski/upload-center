@@ -11,9 +11,7 @@ export default function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [requestsRemaining, setRequestsRemaining] = useState<number | null>(
-    null
-  );
+  const [requestsRemaining, setRequestsRemaining] = useState<number | null>(null);
 
   const handleFetchProducts = () => {
     if (requestsRemaining === 0) {
@@ -59,36 +57,32 @@ export default function ProductList() {
   }, []);
 
   return (
-    <section className='product-list-root example-container'>
+    <section className="product-list-root example-container">
       <h3>Cloud SQL - Retrieve Data</h3>
       {products.length === 0 && (
         <button
-          className='fetch-button'
+          className="fetch-button"
           onClick={handleFetchProducts}
           // disabled={requestsRemaining === 0}
           disabled
         >
           Fetch Products
         </button>
-
       )}
       <p className="disabled-text">(Disabled due to cost of $1.63 a day.)</p>
 
       {loading && <p>Loading products...</p>}
-      <ul className='product-list'>
+      <ul className="product-list">
         {products.map((p) => (
           <li key={p.id}>
             <strong>{p.name}</strong> — ${p.price}
           </li>
         ))}
       </ul>
-      {error && <p className='error-message'>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       {requestsRemaining !== null && (
-        <div
-          className={`request-counter${requestsRemaining <= 0 ? ' depleted' : ''
-            }`}
-        >
+        <div className={`request-counter${requestsRemaining <= 0 ? ' depleted' : ''}`}>
           Requests remaining: {requestsRemaining}
         </div>
       )}

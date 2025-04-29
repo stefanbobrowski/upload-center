@@ -4,37 +4,26 @@ import './footer.scss';
 const Footer = () => {
   return (
     <footer>
-      <div className='footer-inner-container'>
+      <div className="footer-inner-container">
         <nav>
-          <NavLink
-            to='/'
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
+          <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
             Home
           </NavLink>
           <NavLink
-            to='/examples'
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
+            to="/examples"
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             Examples
           </NavLink>
           <NavLink
-            to='/privacy'
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
+            to="/privacy"
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             Privacy Policy
           </NavLink>
           <NavLink
-            to='/terms'
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
+            to="/terms"
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             Terms of Service
           </NavLink>
