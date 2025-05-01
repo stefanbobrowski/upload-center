@@ -10,13 +10,6 @@ COPY frontend/package*.json ./
 RUN npm install
 
 COPY frontend ./
-
-# 👇 Inject .env.production file with site key
-RUN echo "VITE_RECAPTCHA_SITE_KEY=$VITE_RECAPTCHA_SITE_KEY" > .env.production
-
-# 👇 Make sure the key is also set as an ENV variable for logging
-RUN echo "🔥 Docker build-time VITE_RECAPTCHA_SITE_KEY=$VITE_RECAPTCHA_SITE_KEY"
-
 RUN npm run build
 
 # Stage 2: Build backend
