@@ -11,13 +11,6 @@ import { MAX_REQUESTS_PER_HOUR } from '../../constants/rateLimits.ts';
 const Examples = () => {
   const { requestsRemaining } = useRequestCounter();
 
-  const counterColor =
-    requestsRemaining === 0
-      ? '#ff5c5c' // red
-      : requestsRemaining <= 2
-        ? '#ffb84d' // orange
-        : '#ffd93d'; // bright yellow
-
   const remainingText = requestsRemaining === null ? '?' : requestsRemaining;
 
   return (
