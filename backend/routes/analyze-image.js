@@ -17,7 +17,8 @@ if (!RECAPTCHA_SECRET_KEY) throw new Error("reCAPTCHA secret key is required.");
 const visionClient = new vision.ImageAnnotatorClient();
 
 router.post("/", upload.single("image"), async (req, res) => {
-  const prompt = req.body.prompt || "Describe this image";
+  const userPrompt = req.body.prompt || "Describe this image.";
+  const prompt = `Respond briefly: ${userPrompt} (Limit your answer to one short sentence.)`;
   const cleanPrompt = prompt.trim().replace(/[^a-zA-Z0-9 ?.,!"()\-]/g, "");
   const recaptchaToken = req.body.recaptchaToken;
 

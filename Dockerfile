@@ -6,6 +6,7 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend ./
+COPY frontend/.env.production .env.production
 RUN npm run build
 
 # Accept build-time environment variable

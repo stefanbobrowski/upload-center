@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import './fixed-controls.scss';
+import './theme-toggle.scss';
 
-const FixedControls = () => {
+const ThemeToggle = () => {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem('theme');
     if (stored) return stored === 'dark';
@@ -16,8 +16,8 @@ const FixedControls = () => {
   }, [darkMode]);
 
   return (
-    <div className="fixed-controls">
-      <div className="theme-toggle">
+    <div className="theme-toggle">
+      <div className="theme-toggle-container">
         <span>Light</span>
         <label className="switch">
           <input type="checkbox" onChange={() => setDarkMode((prev) => !prev)} checked={darkMode} />
@@ -29,4 +29,4 @@ const FixedControls = () => {
   );
 };
 
-export default FixedControls;
+export default ThemeToggle;

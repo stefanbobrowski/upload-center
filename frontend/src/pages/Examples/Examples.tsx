@@ -21,37 +21,40 @@ const Examples = () => {
   const remainingText = requestsRemaining === null ? '?' : requestsRemaining;
 
   return (
-    <main className="examples-root">
-      <div className="left-col">
-        <h1>Examples</h1>
-        <p>
-          A handful of <strong>Google Cloud Platform (GCP)</strong> examples.
-        </p>
-        <p>
-          Global Rate Limit set to <strong>{MAX_REQUESTS_PER_HOUR} requests per hour</strong> (See
-          cloud <i>☁️</i>).
-        </p>
-        <p className="requests-remaining-text" style={{ color: counterColor }}>
-          Requests Remaining: {remainingText}/{MAX_REQUESTS_PER_HOUR}
-        </p>
-        <ol className="examples-list" type="I">
-          <li>
-            <ProductList />
-          </li>
-          <li>
-            <SentimentChecker />
-          </li>
-          <li>
-            <ImageAnalyzer />
-          </li>
-          <li>
-            <UploadText />
-          </li>
-          <li>
-            <UploadJSON />
-          </li>
-        </ol>
-      </div>
+    <main className="examples-page">
+      <h1>Examples</h1>
+      <p>
+        A handful of <strong style={{ color: '#4285F4' }}>Google Cloud Platform (GCP)</strong>{' '}
+        examples.
+      </p>
+      <p>
+        Global Rate Limit set to{' '}
+        <strong className="alt-color">{MAX_REQUESTS_PER_HOUR} requests per hour</strong>.
+      </p>
+      <p className="requests-remaining-text">
+        Requests Remaining:{' '}
+        <strong className="alt-color">
+          {remainingText}/{MAX_REQUESTS_PER_HOUR}
+        </strong>
+        .
+      </p>
+      <ol className="examples-list" type="I">
+        <li>
+          <ProductList />
+        </li>
+        <li>
+          <SentimentChecker />
+        </li>
+        <li>
+          <ImageAnalyzer />
+        </li>
+        <li>
+          <UploadText />
+        </li>
+        <li>
+          <UploadJSON />
+        </li>
+      </ol>
       <CloudCounter />
     </main>
   );

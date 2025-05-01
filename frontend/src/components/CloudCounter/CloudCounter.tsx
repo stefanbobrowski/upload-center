@@ -9,7 +9,7 @@ const CloudCounter = () => {
   const counterColor =
     requestsRemaining === 0
       ? '#ff5c5c' // red
-      : requestsRemaining <= 2
+      : requestsRemaining <= 3
         ? '#ffb84d' // orange
         : '#ffd93d'; // bright yellow
 
@@ -17,10 +17,11 @@ const CloudCounter = () => {
 
   return (
     <div className="cloud-counter">
-      <div className="cloud-icon">
-        {/* ☁️ */}
-        <img src={cloudImg}></img>
-        <div className="rate-limit-counter" style={{ color: counterColor }}>
+      <div className="cloud-container">
+        {/* <div className="cloud-image">
+          <img src={cloudImg}></img>
+        </div> */}
+        <div className="rate-limit-counter">
           Requests: {remainingText}/{MAX_REQUESTS_PER_HOUR}
         </div>
       </div>

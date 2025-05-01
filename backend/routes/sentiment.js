@@ -25,7 +25,6 @@ router.post("/", async (req, res) => {
   // ✅ reCAPTCHA verification
   try {
     const recaptchaResult = await verifyRecaptcha(recaptchaToken);
-
     const score = recaptchaResult.score ?? 0;
     const success = recaptchaResult.success === true;
 

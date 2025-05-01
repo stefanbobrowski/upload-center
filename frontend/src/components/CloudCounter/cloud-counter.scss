@@ -1,59 +1,35 @@
 .cloud-counter {
-  width: 100%;
-  max-width: 250px;
-  height: fit-content;
-  margin-top: 4rem;
+  position: fixed;
+  top: 6rem;
+  right: 2rem;
+  z-index: 100;
+  padding: 0.4rem;
+  border: 1px solid var(--text);
+  border-radius: 4px;
+  background-color: var(--header-footer-bg);
 
-  // max-width: 384px;
-  // height: 200px;
-  // aspect-ratio: 3/2;
-  // background: url('/cloud.png') top / contain no-repeat;
-
-  @media (max-width: 1000px) {
-    // position: relative;
-    // width: 200px;
-    // top: 0rem;
-    // right: 0rem;
-    // font-size: 8rem;
+  @media (max-width: 900px) {
+    top: 5rem;
+    right: 1.5rem;
   }
 
-  .cloud-icon {
-    position: fixed;
-    width: 400px;
-    top: 2.5rem;
-    right: 0rem;
-    font-size: 15rem;
-
-    @media (max-width: 1000px) {
-      // position: relative;
-      // width: 200px;
-      // top: 0rem;
-      // right: 0rem;
-      // font-size: 8rem;
-    }
-
+  .cloud-container {
     .rate-limit-counter {
-      position: absolute;
-      top: 56%;
-      left: 50%;
-      transform: translate(-50%, -56%);
       display: block;
-      width: 100%;
+      width: fit-content;
       text-align: center;
       margin: auto;
-      padding: 0rem 0.1rem;
       border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.25rem;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1.7rem;
       font-weight: bold;
-      color: #ffd900;
-      text-shadow: 2px 2px 4px #000;
-      // background-color: rgba(255, 255, 255, 0.25);
+      text-transform: uppercase;
+      letter-spacing: 0px;
+      line-height: 1;
+      color: var(--contrast);
 
       @media (max-width: 900px) {
-        font-size: 1rem;
+        font-size: 1.4rem;
       }
     }
   }

@@ -8,7 +8,7 @@ import Terms from './pages/Terms/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import { RecaptchaProvider } from './helpers/RecaptchaProvider';
 import { RequestCounterProvider } from './context/RequestCounterContext';
-import FixedControls from './components/FixedControls/FixedControls';
+import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
         </Routes>
-        <FixedControls />
+        <ThemeToggle />
         <Footer />
       </RecaptchaProvider>
     </RequestCounterProvider>

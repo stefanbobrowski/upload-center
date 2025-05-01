@@ -75,7 +75,12 @@ pre {
   display: block;
   text-align: right;
   font-size: 0.8rem;
+  font-weight: bold;
   color: #808080;
+}
+
+.request-warning-text {
+  margin-block-end: 0;
 }
 
 .status-box {
@@ -97,7 +102,8 @@ pre {
 }
 
 strong {
-  color: rgb(63, 153, 157);
+  // color: #3f999d;
+  // color: var(--light);
 }
 
 @keyframes dots {
@@ -116,4 +122,8 @@ strong {
   100% {
     content: '.';
   }
+}
+
+p > a:hover {
+  color: var(--contrast);
 }
