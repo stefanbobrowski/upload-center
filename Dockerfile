@@ -10,10 +10,10 @@ COPY frontend/package*.json ./
 RUN npm install
 
 COPY frontend ./
-COPY frontend/.env.production .env.production
+# COPY frontend/.env.production .env.production
 
-# Ensure Vite sees the environment variable
-RUN echo "VITE_RECAPTCHA_SITE_KEY=$VITE_RECAPTCHA_SITE_KEY" >> .env.production
+# 👇 Inject env var directly into .env.production file used by Vite
+RUN echo "VITE_RECAPTCHA_SITE_KEY=$VITE_RECAPTCHA_SITE_KEY" > .env.production
 
 RUN npm run build
 
