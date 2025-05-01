@@ -6,7 +6,7 @@
   "description": "Frontend React application for Cloud Playground - Upload Center — file upload, analysis dashboard, and GCP integration demo.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "echo SITE_KEY=$VITE_RECAPTCHA_SITE_KEY && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
