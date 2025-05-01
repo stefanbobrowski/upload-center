@@ -99,7 +99,9 @@ export const UploadInput = ({
   return (
     <div className="upload-input">
       <label className="upload-label" htmlFor={uniqueId}>
-        <p>{label}</p>
+        <p>
+          <strong>{label}</strong>
+        </p>
         <input
           id={uniqueId}
           ref={inputRef}

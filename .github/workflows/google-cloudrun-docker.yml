@@ -36,7 +36,6 @@ jobs:
         run: |
           IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}"
           docker build \
-            --build-arg VITE_RECAPTCHA_SITE_KEY=${{ secrets.VITE_RECAPTCHA_SITE_KEY }} \
             -t $IMAGE .
           docker push $IMAGE
 

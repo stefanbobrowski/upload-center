@@ -16,7 +16,7 @@
 .sentiment-result {
   padding: 1rem;
   margin-top: 1rem;
-  border: 2px solid var(--accent);
+  border: 1px solid var(--light);
   border-radius: 6px;
   background-color: var(--bg);
 }
@@ -30,6 +30,7 @@
 
 .char-counter {
   font-size: 0.8rem;
+  font-weight: bold;
   color: #888;
 }
 

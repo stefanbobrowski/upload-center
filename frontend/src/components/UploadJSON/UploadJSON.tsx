@@ -89,7 +89,7 @@ const UploadJSON = () => {
         onUploadSuccess={handleUploadSuccess}
         onError={handleUploadError}
       />
-      <p className="warning-text">⚡ Costs 2 requests (upload + analyze)</p>
+      <p className="request-warning-text">⚡ Costs 2 requests (upload + analyze)</p>
       <div className="status-box">
         {(uploadStatus === 'uploading' || uploadStatus === 'analyzing') && (
           <pre className="success">

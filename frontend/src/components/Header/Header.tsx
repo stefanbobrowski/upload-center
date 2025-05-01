@@ -6,9 +6,7 @@ const Header = () => {
     <header>
       <div className="header-inner-container">
         <Link to="/" className="logo-home-link">
-          <h1>
-            <i>☁️</i>Cloud Playground
-          </h1>
+          <h1>Cloud Playground</h1>
         </Link>
         <nav>
           <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
@@ -21,7 +19,6 @@ const Header = () => {
             Examples
           </NavLink>
         </nav>
-        <div></div>
       </div>
     </header>
   );

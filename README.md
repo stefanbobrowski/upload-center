@@ -1,7 +1,6 @@
 # Cloud Playground ☁️ - Upload Center 🌆
 
-A full-stack web application for uploading, analyzing, and managing data using **Google Cloud Platform** services.
-Built for scalability, security, and modern DevOps workflows.
+A full-stack web application for uploading, analyzing, and managing data using **Google Cloud Platform** services. Built for scalability, security, and modern DevOps workflows.
 
 👉 React + Vite Frontend  
 👉 Express + Node.js Backend  
@@ -17,35 +16,68 @@ Built for scalability, security, and modern DevOps workflows.
 
 ---
 
-## 💠 Tech Stack
+## 🔠 Project Overview
 
-- **Frontend:** React (Vite + TypeScript)
-- **Backend:** Node.js + Express
-- **Database:** Cloud SQL (PostgreSQL)
-- **Storage:** Google Cloud Storage (GCS)
-- **Big Data Analysis:** BigQuery
-- **AI Integrations:** Vertex AI, Gemini AI (Sentiment + Image Analysis)
-- **Security:** Cloud SQL Auth Proxy, Google Cloud IAM, reCAPTCHA v3 (planned), Rate Limiters, Helmet, CORS
-- **CI/CD:** GitHub Actions + Docker
-- **Hosting/Infra:** Google Cloud Run (Dockerized)
+Welcome to the Cloud Playground — Upload Center!
+
+Explore hands-on examples to see it in action, showcasing the power of modern backend development, scalable cloud infrastructure, and AI integrations — all built on **Google Cloud Platform (GCP)**.
+
+This project demonstrates a secure, production-grade full-stack architecture featuring:
+
+- **Cloud SQL (PostgreSQL):** Structured data storage
+- **Cloud Run:** Dockerized backend + full app delivery
+- **Cloud Storage:** File uploads (text, images, JSON)
+- **BigQuery:** Large-scale JSON analysis
+- **Vertex AI & Gemini Pro:** Text and image understanding
 
 ---
 
-## ✨ Features
+## 🛠️ Technology Stack Overview
+
+| Layer    | Technologies Used                              |
+| -------- | ---------------------------------------------- |
+| Frontend | Vite + React (TypeScript, SWC)                 |
+| Backend  | Node.js, Express                               |
+| AI       | Gemini 1.5 Pro (text + image), Vertex AI       |
+| Big Data | BigQuery                                       |
+| Database | Cloud SQL (PostgreSQL)                         |
+| Storage  | Google Cloud Storage                           |
+| Security | IAM, Helmet, CORS, Rate Limiting, reCAPTCHA v3 |
+| Build    | Docker                                         |
+| CI/CD    | GitHub Actions (Docker build & deploy)         |
+| Hosting  | Cloud Run, Artifact Registry                   |
+
+---
+
+## 🔐 Focus on Security
+
+Built with real-world production security in mind. Heavy focus on securing access and preventing abuse of cloud resources from users and bot traffic. Measures include:
+
+- Global & route-based API rate limiting
+- reCAPTCHA v3 integration
+- IP logging & strict CORS rules
+- Hardened HTTP headers with Helmet
+- Role-based access controls via Google Cloud IAM
+
+---
+
+## 🚀 Why It Matters
+
+Upload Center is more than a learning sandbox — it's a blueprint for building secure, scalable, cloud-native web applications using today's most powerful tools from Google Cloud. Whether you're testing uploads, analyzing data, or integrating AI, this platform offers a real-world, extensible foundation for modern web development.
+
+---
+
+## 📆 Features
 
 - ✅ Secure PostgreSQL access with Cloud SQL Proxy
-- ✅ Upload and validate JSON files to Cloud Storage
-- ✅ Auto-convert JSON arrays to newline-delimited JSON (NDJSON)
-- ✅ Load and analyze uploaded files with BigQuery
-- ✅ Display total rows, category breakdowns, and average scores
+- ✅ Text sentiment analysis with Gemini AI
 - ✅ Upload and analyze images with Gemini AI
 - ✅ Vertex AI text file sentiment analysis
+- ✅ Upload and validate JSON files to Cloud Storage
+- ✅ Load and analyze uploaded files with BigQuery
 - ✅ Rate limiting on all sensitive routes
-- ✅ IP logging for uploads and BigQuery loads
-- ✅ CORS-restricted access to trusted domains
-- ✅ Persistent Light/Dark Mode Theme
 - ✅ GitHub Actions CI/CD for Dockerized Cloud Run deployment
-- ✅ Fully responsive frontend
+- ✅ Persistent Light/Dark Mode Theme
 
 ---
 
@@ -137,19 +169,14 @@ RECAPTCHA_SECRET_KEY=your-recaptcha-key (optional)
 
 ## 🤔 Future Work
 
-- User authentication (Firebase Auth or Clerk)
-- Admin dashboard for managing uploads and analysis results
-- Upload product images + automatic resizing
-- Full GraphQL or gRPC backend (optional)
-- reCAPTCHA v3 on upload forms
-- GCS lifecycle rules (auto-delete old files after X days)
+- User authentication
 
 ---
 
-## 👨‍💼 Author
+## 👨‍💻 Author
 
-Created by [@stefanbobrowski](https://github.com/stefanbobrowski) —  
-Feel free to reach out, contribute, or fork this project!
+Created by [@stefanbobrowski](https://github.com/stefanbobrowski)
+Website: https://stefanbobrowski.com
 
 ---
 
@@ -159,3 +186,9 @@ Licensed under the **Apache License 2.0**.
 See [LICENSE](./LICENSE) for full details.
 
 ---
+
+## 📁 Full Code Repository
+
+Feel free to view the code or contribute with a pull request.
+You can explore the full source code for Upload Center here:
+[📁 GitHub – Upload Center](https://github.com/stefanbobrowski/upload-center)
