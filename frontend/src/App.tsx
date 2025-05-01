@@ -11,8 +11,6 @@ import { RequestCounterProvider } from './context/RequestCounterContext';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 
 function App() {
-  console.log('🔥 reCAPTCHA key in build:', import.meta.env.VITE_RECAPTCHA_SITE_KEY);
-
   return (
     <RequestCounterProvider>
       <RecaptchaProvider>
