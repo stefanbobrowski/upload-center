@@ -1,11 +1,11 @@
-const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
-
-if (!SITE_KEY) {
-  console.error('❌ No reCAPTCHA site key found! Check environment variables.');
-  throw new Error('No reCAPTCHA site key found.');
-}
-
 export async function getRecaptchaToken(action: string): Promise<string> {
+  const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
+
+  if (!SITE_KEY) {
+    console.error('❌ No reCAPTCHA site key found! Check environment variables.');
+    throw new Error('No reCAPTCHA site key found.');
+  }
+
   return new Promise((resolve, reject) => {
     if (!window.grecaptcha) {
       return reject(new Error('reCAPTCHA not loaded'));
@@ -30,7 +30,6 @@ export async function getRecaptchaToken(action: string): Promise<string> {
         if (!clients || Object.keys(clients).length === 0) {
           console.warn('No reCAPTCHA clients found after waiting. Manually creating client.');
 
-          // Only create one dummy container
           if (!document.getElementById('recaptcha-dummy')) {
             const dummyContainer = document.createElement('div');
             dummyContainer.id = 'recaptcha-dummy';
