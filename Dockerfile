@@ -2,14 +2,11 @@
 FROM node:20-alpine AS build-frontend
 WORKDIR /app/frontend
 
-# Accept build-time environment variable
-ARG VITE_RECAPTCHA_SITE_KEY
-ENV VITE_RECAPTCHA_SITE_KEY=$VITE_RECAPTCHA_SITE_KEY
-
 COPY frontend/package*.json ./
 RUN npm install
 
 COPY frontend ./
+
 RUN npm run build
 
 # Stage 2: Build backend
