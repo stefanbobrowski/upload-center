@@ -26,6 +26,15 @@ app.use(
   }),
 );
 
+// CSP fix
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "frame-ancestors 'self' https://www.google.com",
+  );
+  next();
+});
+
 // ✅ Middleware: CORS policy
 app.use(
   cors({
