@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 
 type UploadInputProps = {
   acceptedTypes: string[];
@@ -70,12 +71,18 @@ export const UploadInput = ({
         await validateJsonFile(file);
       }
 
+      // ✅ Get reCAPTCHA token
+      const recaptchaToken = await getRecaptchaToken('upload_file');
+
       const formData = new FormData();
       formData.append('file', file);
       formData.append('path', storagePath);
 
       const res = await fetch('/api/upload-file', {
         method: 'POST',
+        headers: {
+          'x-recaptcha-token': recaptchaToken,
+        },
         body: formData,
       });
 
