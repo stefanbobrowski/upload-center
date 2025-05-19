@@ -6,7 +6,7 @@ This project integrates multiple security measures to protect cloud resources, A
 
 ## 🛡️ API Rate Limiting
 
-Each sensitive API route is individually protected with `express-rate-limit`, enforcing strict per-IP request limits:
+<!-- Each sensitive API route is individually protected with `express-rate-limit`, enforcing strict per-IP request limits:
 
 | Route                | Limit      | Window |
 | :------------------- | :--------- | :----- |
@@ -15,9 +15,9 @@ Each sensitive API route is individually protected with `express-rate-limit`, en
 | `/api/analyze-image` | 5 requests | 1 hour |
 | `/api/analyze-text`  | 5 requests | 1 hour |
 | `/api/upload-file`   | 5 uploads  | 1 hour |
-| `/api/upload-json`   | 5 uploads  | 1 hour |
+| `/api/upload-json`   | 5 uploads  | 1 hour | -->
 
-Each route has a custom error message to clearly communicate limits to users.
+All routes share the same global limit of 8 requests per hour.
 
 ---
 
@@ -47,7 +47,6 @@ Each route has a custom error message to clearly communicate limits to users.
 
 - File uploads to Google Cloud Storage use memory storage (no temporary disk files).
 - Filenames are randomized with a timestamp prefix to prevent collisions.
-- Each upload endpoint is rate-limited separately to prevent abuse.
 - Upload attempts are IP-logged for security auditing.
 
 ---
@@ -60,9 +59,9 @@ Each route has a custom error message to clearly communicate limits to users.
 
 ---
 
-## 🧠 Additional Protection (Future)
+## 🧠 Additional Protection
 
-- **reCAPTCHA v3** can be integrated on file upload and analysis triggers to stop bot traffic before even reaching the server.
+- **reCAPTCHA v3** integrated on file upload and analysis triggers to stop bot traffic before even reaching the server.
 - **IP blocklisting** can be added if abusive patterns are detected.
 - **GCS Lifecycle Rules** (storage policies) can automatically delete old uploaded files after 7 days.
 

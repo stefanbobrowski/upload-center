@@ -3,10 +3,10 @@ import SentimentChecker from '../../components/SentimentChecker/SentimentChecker
 import ImageAnalyzer from '../../components/ImageAnalyzer/ImageAnalyzer';
 import UploadText from '../../components/UploadText/UploadText';
 import UploadJSON from '../../components/UploadJSON/UploadJSON';
-import './examples.scss';
 import CloudCounter from '../../components/CloudCounter/CloudCounter';
 import { useRequestCounter } from '../../context/RequestCounterContext';
 import { MAX_REQUESTS_PER_HOUR } from '../../constants/rateLimits.ts';
+import './examples.scss';
 
 const Examples = () => {
   const { requestsRemaining } = useRequestCounter();

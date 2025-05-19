@@ -1,7 +1,7 @@
 {
   "name": "upload-center-backend",
   "version": "1.0.0",
-  "description": "Backend server for Cloud Playground - Upload Center — handles file uploads, BigQuery analysis, AI processing, and secure APIs (GCP powered).",
+  "description": "Backend server for Cloud Playground - Upload Center — powered by GCP. File uploads, BigQuery analysis, AI processing, and secure APIs.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -169,7 +169,7 @@ RECAPTCHA_SECRET_KEY=your-recaptcha-key (optional)
 
 ## 🤔 Future Work
 
-- User authentication
+- User login / authentication
 
 ---
 
