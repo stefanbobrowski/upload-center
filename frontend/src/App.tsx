@@ -1,14 +1,14 @@
-import './App.scss';
 import { Routes, Route } from 'react-router-dom';
+import { RecaptchaProvider } from './helpers/RecaptchaProvider';
+import { RequestCounterProvider } from './context/RequestCounterContext';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
 import Examples from './pages/Examples/Examples';
 import Terms from './pages/Terms/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
-import { RecaptchaProvider } from './helpers/RecaptchaProvider';
-import { RequestCounterProvider } from './context/RequestCounterContext';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
+import './App.scss';
 
 function App() {
   return (

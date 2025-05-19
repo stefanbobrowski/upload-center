@@ -124,7 +124,7 @@ const Home = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          GitHub – Upload Center
+          GitHub - Upload Center
         </a>
         .{' '}
       </p>
