@@ -44,7 +44,7 @@ h2 {
   --bg: #edf4f8;
   --text: #222;
   --header-footer-bg: #f8fafb;
-  --header-text-bg: url('/clouds-bg.jpg') center/cover no-repeat;
+  --header-text-bg: url('/clouds-bg.webp') center/cover no-repeat;
   --accent: #329ab4;
   --contrast: #ffa724;
   --light: #3188ca;
@@ -60,7 +60,7 @@ h2 {
   --bg: #0d0f12;
   --text: #eee;
   --header-footer-bg: #02050a;
-  --header-text-bg: url('/clouds-bg-dark.jpg') center/cover no-repeat;
+  --header-text-bg: url('/clouds-bg-dark.webp') center/cover no-repeat;
   --accent: #329ab4;
   --light: #6c91aa;
   --light20: #6c91aa33;
