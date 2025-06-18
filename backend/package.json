@@ -33,6 +33,7 @@
     "@google-cloud/vision": "^5.1.0",
     "@google/generative-ai": "^0.24.0",
     "axios": "1.9.0",
+    "compression": "1.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://upload-center-177749780343.us-central1.run.app/sitemap.xml

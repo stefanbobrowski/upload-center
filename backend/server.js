@@ -4,6 +4,7 @@ const path = require("path");
 const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 const helmet = require("helmet");
+const compression = require("compression");
 const sentimentRoute = require("./routes/sentiment");
 const analyzeImageRoute = require("./routes/analyze-image");
 const uploadFileRoute = require("./routes/upload-file");
@@ -13,6 +14,11 @@ const productsRoute = require("./routes/products");
 const { MAX_REQUESTS_PER_HOUR } = require("./constants/rateLimits");
 
 const app = express();
+
+// 🔒 Trust X-Forwarded-* headers (for real client IPs, especially behind proxies)
+app.set("trust proxy", 1);
+
+app.use(compression());
 
 // ✅ Middleware: parse request bodies
 app.use(express.urlencoded({ extended: true }));
@@ -26,12 +32,25 @@ app.use(
   }),
 );
 
-// CSP fix
+// Content Security Policy (CSP) headers
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "frame-ancestors 'self' https://www.google.com",
+    [
+      "default-src 'self';",
+      "base-uri 'self';",
+      "object-src 'none';",
+      "frame-ancestors 'self';",
+      "img-src 'self' data: https:;",
+      "script-src 'self';",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;",
+      "font-src 'self' https://fonts.gstatic.com;",
+    ].join(" "),
   );
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "geolocation=(), camera=()");
   next();
 });
 
@@ -90,8 +109,16 @@ app.get("/health", (req, res) => {
 // ✅ Serve static frontend
 app.use(
   express.static(path.join(__dirname, "../frontend/dist"), {
-    maxAge: "1d",
-    etag: true,
+    maxAge: "1y",
+    immutable: true,
+    etag: false,
+    setHeaders: (res, path) => {
+      if (path.endsWith(".html")) {
+        res.setHeader("Cache-Control", "no-cache");
+      } else {
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      }
+    },
   }),
 );
 
@@ -99,6 +126,12 @@ app.use(
 app.get("*", (req, res, next) => {
   if (req.path.startsWith("/api/")) return next();
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+});
+
+// ✅ Error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal server error." });
 });
 
 // ✅ Start server
