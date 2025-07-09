@@ -45,6 +45,7 @@ app.use((req, res, next) => {
       "script-src 'self';",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;",
       "font-src 'self' https://fonts.gstatic.com;",
+      "frame-src https://www.google.com;",
     ].join(" "),
   );
   res.setHeader("X-Content-Type-Options", "nosniff");
