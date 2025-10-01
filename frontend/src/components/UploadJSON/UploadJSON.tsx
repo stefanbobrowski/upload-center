@@ -9,6 +9,7 @@ interface CategorySummaryRow {
   category: string;
   total: number;
 }
+
 interface QuerySummary {
   totalRows: number;
   categorySummary: CategorySummaryRow[];
@@ -27,31 +28,49 @@ const UploadJSON = () => {
 
   const handleUploadSuccess = async (url: string) => {
     setUploadStatus('uploading');
-    setUploadMessage('✅ Uploaded to Cloud Storage.\n📡 Sending to BigQuery...');
+    setUploadMessage('📤 Uploading JSON file to Cloud Storage...');
+    setErrorMessage(null);
+    setQueryResult(null);
 
-    if (!recaptchaReady) return setErrorMessage('reCAPTCHA not ready.');
-    if (requestsRemaining === 0) return setErrorMessage('Request limit reached.');
+    if (!recaptchaReady) {
+      setUploadStatus('error');
+      setErrorMessage('reCAPTCHA not ready.');
+      return;
+    }
+    if (requestsRemaining === 0) {
+      setUploadStatus('error');
+      setErrorMessage('Request limit reached.');
+      return;
+    }
 
     try {
       const recaptchaToken = await getRecaptchaToken('analyze_text');
+
       setUploadStatus('analyzing');
+      setUploadMessage('✅ Uploaded to Cloud Storage.\n📡 Sending to BigQuery...');
 
       const response = await fetch('/api/upload-json', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-recaptcha-token': recaptchaToken },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-recaptcha-token': recaptchaToken,
+        },
         body: JSON.stringify({ gcsUrl: url }),
       });
 
       const remaining = response.headers.get('ratelimit-remaining');
-      if (remaining !== null) setRequestsRemaining(parseInt(remaining, 10));
+      if (remaining !== null) {
+        setRequestsRemaining(parseInt(remaining, 10));
+      }
 
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setErrorMessage(data.error || `Server error ${response.status}`);
-        if (typeof data.requestsRemaining === 'number')
-          setRequestsRemaining(data.requestsRemaining);
         setUploadStatus('error');
+        setErrorMessage(data.error || `Server error ${response.status}`);
+        if (typeof data.requestsRemaining === 'number') {
+          setRequestsRemaining(data.requestsRemaining);
+        }
         return;
       }
 
@@ -74,30 +93,51 @@ const UploadJSON = () => {
       }
     } catch (err) {
       console.error('BigQuery load error:', err);
-      setErrorMessage(err instanceof Error ? err.message : 'BigQuery load failed.');
       setUploadStatus('error');
+      setErrorMessage(err instanceof Error ? err.message : 'BigQuery load failed.');
     }
+  };
+
+  const handleUploadError = (error: string) => {
+    setUploadStatus('error');
+    setErrorMessage(error);
   };
 
   return (
     <section className="upload-json example-container">
       <h3>BigQuery - JSONL Analysis</h3>
+
       <UploadInput
         acceptedTypes={['.json']}
         storagePath="uploads/json/"
         label="Upload JSON/JSONL File to Cloud Storage for BigQuery Analysis"
         onUploadStart={() => {
           setUploadStatus('uploading');
+          setUploadMessage('📤 Uploading JSON file to Cloud Storage...');
           setErrorMessage(null);
           setQueryResult(null);
         }}
         onUploadSuccess={handleUploadSuccess}
-        onError={(error) => {
-          setUploadStatus('error');
-          setErrorMessage(error);
-        }}
+        onError={handleUploadError}
       />
-      {errorMessage && <p className="error">{errorMessage}</p>}
+
+      <div className="status-box">
+        {uploadStatus === 'uploading' && (
+          <pre className="success">
+            {uploadMessage}
+            <span className="dot-anim" />
+          </pre>
+        )}
+        {uploadStatus === 'analyzing' && (
+          <pre className="success">
+            {uploadMessage}
+            <span className="dot-anim" />
+          </pre>
+        )}
+        {uploadStatus === 'success' && <pre className="success">{uploadMessage}</pre>}
+        {uploadStatus === 'error' && <p className="error">{errorMessage}</p>}
+      </div>
+
       {queryResult && (
         <div className="result">
           <p>

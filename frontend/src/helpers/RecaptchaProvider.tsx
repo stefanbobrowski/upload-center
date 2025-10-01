@@ -1,6 +1,5 @@
-import { createContext, useEffect, useState } from 'react';
-
-export const RecaptchaContext = createContext(false);
+import { useEffect, useState } from 'react';
+import { RecaptchaContext } from '../context/RecaptchaContext';
 
 export const RecaptchaProvider = ({ children }: { children: React.ReactNode }) => {
   const [ready, setReady] = useState(false);

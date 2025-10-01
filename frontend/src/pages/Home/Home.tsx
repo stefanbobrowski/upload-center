@@ -99,14 +99,15 @@ const Home = () => {
       <p>
         Built with real-world production security in mind. Heavy focus on securing access and
         preventing abuse of cloud resources from users and bot traffic. Measures include:
-        <ul>
-          <li>Global & route-based API rate limiting</li>
-          <li>reCAPTCHA v3 integration</li>
-          <li>IP logging & strict CORS rules</li>
-          <li>Hardened HTTP headers with Helmet</li>
-          <li>Role-based access controls via Google Cloud IAM</li>
-        </ul>
       </p>
+
+      <ul>
+        <li>Global & route-based API rate limiting</li>
+        <li>reCAPTCHA v3 integration</li>
+        <li>IP logging & strict CORS rules</li>
+        <li>Hardened HTTP headers with Helmet</li>
+        <li>Role-based access controls via Google Cloud IAM</li>
+      </ul>
 
       <h2>🚀 Why It Matters</h2>
       <p>

@@ -23,8 +23,16 @@ const UploadText = () => {
     setUploadMessage('✅ Upload complete!');
     setAnalyzeStatus('starting');
 
-    if (!recaptchaReady) return setErrorMessage('reCAPTCHA not ready.');
-    if (requestsRemaining === 0) return setErrorMessage('Request limit reached.');
+    if (!recaptchaReady) {
+      setErrorMessage('reCAPTCHA not ready.');
+      setAnalyzeStatus('error');
+      return;
+    }
+    if (requestsRemaining === 0) {
+      setErrorMessage('Request limit reached.');
+      setAnalyzeStatus('error');
+      return;
+    }
 
     try {
       const recaptchaToken = await getRecaptchaToken('analyze_text');
@@ -82,10 +90,33 @@ const UploadText = () => {
           setErrorMessage(error);
         }}
       />
+
+      <p className="request-warning-text">⚡ Costs 2 requests (upload + analyze)</p>
+
       <div className="status-box">
+        {uploadStatus === 'uploading' && (
+          <p>
+            📤 Uploading
+            <span className="dot-anim" />
+          </p>
+        )}
         {uploadStatus === 'success' && <p className="success">{uploadMessage}</p>}
-        {analyzeStatus === 'success' && <pre className="result">{analysisResult}</pre>}
-        {errorMessage && <p className="error">{errorMessage}</p>}
+        {uploadStatus === 'error' && <p className="error">❌ Upload failed: {errorMessage}</p>}
+
+        {analyzeStatus === 'starting' && <p>🧠 Starting Vertex AI Analysis...</p>}
+        {analyzeStatus === 'processing' && (
+          <p>
+            🧠 Summarizing
+            <span className="dot-anim" />
+          </p>
+        )}
+        {analyzeStatus === 'success' && (
+          <>
+            <p className="success">✅ Summary complete:</p>
+            <pre className="result">{analysisResult}</pre>
+          </>
+        )}
+        {analyzeStatus === 'error' && <p className="error">❌ Summary failed: {errorMessage}</p>}
       </div>
     </section>
   );
