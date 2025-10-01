@@ -38,7 +38,8 @@ jobs:
       - name: Build and Push Docker image
         run: |
           IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}"
-          docker build -t $IMAGE .
+          # 🚀 Bust Docker cache to avoid stale backend/frontend code
+          docker build --no-cache -t $IMAGE .
           docker push $IMAGE
 
       - name: Deploy to Cloud Run

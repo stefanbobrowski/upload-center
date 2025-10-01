@@ -38,7 +38,7 @@ This project demonstrates a secure, production-grade full-stack architecture fea
 | -------- | ---------------------------------------------- |
 | Frontend | Vite + React (TypeScript, SWC)                 |
 | Backend  | Node.js, Express                               |
-| AI       | Gemini 1.5 Pro (text + image), Vertex AI       |
+| AI       | Gemini 2.5 (text + image), Vertex AI       |
 | Big Data | BigQuery                                       |
 | Database | Cloud SQL (PostgreSQL)                         |
 | Storage  | Google Cloud Storage                           |

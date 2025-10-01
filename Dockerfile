@@ -7,25 +7,25 @@ RUN npm install
 COPY frontend/ ./
 RUN npm run build
 
-# Stage 2: Build backend
+# Stage 2: Backend container
 FROM node:20-alpine
 WORKDIR /app
 
-# Copy backend package files and install deps
+# Copy backend dependencies
 COPY backend/package*.json ./backend/
 RUN cd backend && npm install --omit=dev
 
 # Copy backend code
 COPY backend ./backend
 
-# Copy built frontend into backend's dist folder
+# Copy built frontend into backend’s public dist folder
 COPY --from=build-frontend /app/frontend/dist ./backend/frontend/dist
 
-# Set working directory to backend
+# Set working dir
 WORKDIR /app/backend
 
+# Cloud Run expects the app to listen on $PORT
+ENV PORT=8080
 EXPOSE 8080
 
-# Explicit path to server.js
 CMD ["node", "server.js"]
-
