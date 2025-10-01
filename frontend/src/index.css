@@ -89,6 +89,10 @@ p {
   @media (min-width: 1200px) {
     font-size: 1.125rem;
   }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 ol,

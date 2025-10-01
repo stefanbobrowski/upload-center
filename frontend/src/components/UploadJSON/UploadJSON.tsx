@@ -1,9 +1,20 @@
 import { useState } from 'react';
 import { UploadInput } from '../UploadInput/UploadInput';
 import { useRequestCounter } from '../../context/RequestCounterContext';
-import { useRecaptchaReady } from '../../helpers/RecaptchaProvider';
+import { useRecaptchaReady } from '../../helpers/useRecaptchaReady';
 import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 import './upload-json.scss';
+
+interface CategorySummaryRow {
+  category: string;
+  total: number;
+}
+
+interface QuerySummary {
+  totalRows: number;
+  categorySummary: CategorySummaryRow[];
+  averageScore: number | null;
+}
 
 const UploadJSON = () => {
   const [uploadStatus, setUploadStatus] = useState<
@@ -11,34 +22,34 @@ const UploadJSON = () => {
   >('idle');
   const [uploadMessage, setUploadMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [queryResult, setQueryResult] = useState<any | null>(null);
+  const [queryResult, setQueryResult] = useState<QuerySummary | null>(null);
   const recaptchaReady = useRecaptchaReady();
   const { requestsRemaining, setRequestsRemaining } = useRequestCounter();
 
-  const handleUploadStart = () => {
+  const handleUploadSuccess = async (url: string) => {
     setUploadStatus('uploading');
     setUploadMessage('📤 Uploading JSON file to Cloud Storage...');
     setErrorMessage(null);
     setQueryResult(null);
-  };
-
-  const handleUploadSuccess = async (url: string) => {
-    setUploadStatus('uploading');
-    setUploadMessage('✅ Uploaded to Cloud Storage.\n📡 Sending to BigQuery...');
 
     if (!recaptchaReady) {
-      throw new Error('reCAPTCHA not ready. Please wait.');
+      setUploadStatus('error');
+      setErrorMessage('reCAPTCHA not ready.');
+      return;
     }
     if (requestsRemaining === 0) {
-      throw new Error('Request limit reached.');
+      setUploadStatus('error');
+      setErrorMessage('Request limit reached.');
+      return;
     }
 
     try {
       const recaptchaToken = await getRecaptchaToken('analyze_text');
 
       setUploadStatus('analyzing');
+      setUploadMessage('✅ Uploaded to Cloud Storage.\n📡 Sending to BigQuery...');
 
-      const res = await fetch('/api/upload-json', {
+      const response = await fetch('/api/upload-json', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,29 +58,43 @@ const UploadJSON = () => {
         body: JSON.stringify({ gcsUrl: url }),
       });
 
-      // ✅ Update rate limit right after fetch
-      const remaining = res.headers.get('ratelimit-remaining');
+      const remaining = response.headers.get('ratelimit-remaining');
       if (remaining !== null) {
         setRequestsRemaining(parseInt(remaining, 10));
       }
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Server responded with ${res.status}: ${errorText.slice(0, 100)}`);
-      }
+      const data = await response.json().catch(() => ({}));
 
-      const data = await res.json();
+      if (!response.ok) {
+        setUploadStatus('error');
+        setErrorMessage(data.error || `Server error ${response.status}`);
+        if (typeof data.requestsRemaining === 'number') {
+          setRequestsRemaining(data.requestsRemaining);
+        }
+        return;
+      }
 
       setUploadStatus('success');
       setUploadMessage((prev) => prev + '\n✅ BigQuery analysis complete!');
 
       if (data.summary) {
-        setQueryResult(data.summary);
+        type RawRow = { category?: unknown; total?: unknown };
+        setQueryResult({
+          totalRows: Number(data.summary.totalRows || 0),
+          categorySummary: Array.isArray(data.summary.categorySummary)
+            ? (data.summary.categorySummary as RawRow[]).map((row) => ({
+                category: String(row.category ?? ''),
+                total: Number(row.total ?? 0),
+              }))
+            : [],
+          averageScore:
+            data.summary.averageScore !== null ? Number(data.summary.averageScore) : null,
+        });
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('BigQuery load error:', err);
       setUploadStatus('error');
-      setErrorMessage(`❌ BigQuery load failed: ${err.message}`);
+      setErrorMessage(err instanceof Error ? err.message : 'BigQuery load failed.');
     }
   };
 
@@ -81,17 +106,29 @@ const UploadJSON = () => {
   return (
     <section className="upload-json example-container">
       <h3>BigQuery - JSONL Analysis</h3>
+
       <UploadInput
         acceptedTypes={['.json']}
         storagePath="uploads/json/"
         label="Upload JSON/JSONL File to Cloud Storage for BigQuery Analysis"
-        onUploadStart={handleUploadStart}
+        onUploadStart={() => {
+          setUploadStatus('uploading');
+          setUploadMessage('📤 Uploading JSON file to Cloud Storage...');
+          setErrorMessage(null);
+          setQueryResult(null);
+        }}
         onUploadSuccess={handleUploadSuccess}
         onError={handleUploadError}
       />
-      <p className="request-warning-text">⚡ Costs 2 requests (upload + analyze)</p>
+
       <div className="status-box">
-        {(uploadStatus === 'uploading' || uploadStatus === 'analyzing') && (
+        {uploadStatus === 'uploading' && (
+          <pre className="success">
+            {uploadMessage}
+            <span className="dot-anim" />
+          </pre>
+        )}
+        {uploadStatus === 'analyzing' && (
           <pre className="success">
             {uploadMessage}
             <span className="dot-anim" />
@@ -103,38 +140,28 @@ const UploadJSON = () => {
 
       {queryResult && (
         <div className="result">
-          <h4>📊 BigQuery Analysis Result:</h4>
-
-          {queryResult.totalRows !== undefined && (
-            <p>
-              <strong>Total Rows Uploaded:</strong> {queryResult.totalRows}
-            </p>
-          )}
-
-          {queryResult.categorySummary && queryResult.categorySummary.length > 0 && (
-            <div className="category-summary">
-              <h5>Top Categories:</h5>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Category</th>
-                    <th>Count</th>
+          <p>
+            <strong>Total Rows:</strong> {queryResult.totalRows}
+          </p>
+          {queryResult.categorySummary.length > 0 && (
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                {queryResult.categorySummary.map((r, i) => (
+                  <tr key={i}>
+                    <td>{r.category}</td>
+                    <td>{r.total}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {queryResult.categorySummary.map((row: any, idx: number) => (
-                    <tr key={idx}>
-                      <td>{row.category}</td>
-                      <td>{row.total}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           )}
-
-          {!queryResult.categorySummary?.length && <p>No category breakdown available.</p>}
-          {queryResult.averageScore !== undefined && (
+          {queryResult.averageScore !== null && (
             <p>
               <strong>Average Score:</strong> {queryResult.averageScore.toFixed(2)}
             </p>

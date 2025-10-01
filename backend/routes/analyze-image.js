@@ -1,131 +1,116 @@
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
-const fetch = require("node-fetch");
 const vision = require("@google-cloud/vision");
+const { VertexAI } = require("@google-cloud/vertexai");
 const { verifyRecaptcha } = require("../helpers/verifyRecaptcha");
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
-
-if (!GEMINI_API_KEY) throw new Error("Gemini API key is required.");
-if (!RECAPTCHA_SECRET_KEY) throw new Error("reCAPTCHA secret key is required.");
+// Multer config
+const upload = multer({
+  dest: "uploads/",
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+});
 
 const visionClient = new vision.ImageAnnotatorClient();
+const vertexAI = new VertexAI({
+  project: process.env.GCLOUD_PROJECT,
+  location: process.env.GCLOUD_LOCATION || "us-central1",
+});
+
+// Function-calling schema
+const analyzeImageSchema = {
+  name: "analyze_image",
+  description: "Analyze an image and return a short structured description.",
+  parameters: {
+    type: "object",
+    properties: {
+      description: {
+        type: "string",
+        description: "A short, safe description of the image content."
+      }
+    },
+    required: ["description"]
+  }
+};
 
 router.post("/", upload.single("image"), async (req, res) => {
-  const userPrompt = req.body.prompt || "Describe this image.";
-  const prompt = `Respond briefly: ${userPrompt} (Limit your answer to one short sentence.)`;
-  const cleanPrompt = prompt.trim().replace(/[^a-zA-Z0-9 ?.,!"()\-]/g, "");
+  const prompt = (req.body.prompt || "Describe this image.").trim().slice(0, 300);
   const recaptchaToken = req.body.recaptchaToken;
 
-  if (!recaptchaToken) {
-    return res.status(400).json({ error: "Missing reCAPTCHA token." });
-  }
+  if (!recaptchaToken) return res.status(400).json({ error: "Missing reCAPTCHA token." });
+  if (!req.file) return res.status(400).json({ error: "Image file is required." });
 
-  if (!req.file) {
-    return res.status(400).json({ error: "Image file is required." });
-  }
-
-  if (!cleanPrompt || cleanPrompt.length > 300) {
-    return res.status(400).json({ error: "Prompt must be 1–300 characters." });
-  }
-
-  // ✅ reCAPTCHA verification
+  // Verify reCAPTCHA
   try {
-    const recaptchaResult = await verifyRecaptcha(recaptchaToken);
-
-    const score = recaptchaResult.score ?? 0;
-    const success = recaptchaResult.success === true;
-
+    const { success, score } = await verifyRecaptcha(recaptchaToken);
     if (!success || score < 0.5) {
-      console.warn("⚠️ reCAPTCHA verification failed", {
-        ip: req.ip,
-        score,
-        success,
-      });
       return res.status(403).json({ error: "reCAPTCHA verification failed." });
     }
   } catch (err) {
-    console.error("Error verifying reCAPTCHA:", err);
+    console.error("reCAPTCHA error:", err);
     return res.status(500).json({ error: "Failed to verify reCAPTCHA." });
   }
 
   const imagePath = req.file.path;
 
   try {
-    // NSFW filtering using Cloud Vision SafeSearch
+    // ✅ Content safety via Vision API
     const [result] = await visionClient.safeSearchDetection(imagePath);
     const safe = result.safeSearchAnnotation;
-
     if (
-      safe.adult === "LIKELY" ||
-      safe.adult === "VERY_LIKELY" ||
-      safe.violence === "LIKELY" ||
-      safe.violence === "VERY_LIKELY" ||
+      ["LIKELY", "VERY_LIKELY"].includes(safe.adult) ||
+      ["LIKELY", "VERY_LIKELY"].includes(safe.violence) ||
       safe.racy === "VERY_LIKELY"
     ) {
-      console.warn("Blocked NSFW image:", safe);
-      return res
-        .status(403)
-        .json({ error: "Image flagged as unsafe by content filter." });
+      return res.status(403).json({ error: "Image flagged as unsafe." });
     }
 
-    const imageBuffer = fs.readFileSync(imagePath);
-    const base64Image = imageBuffer.toString("base64");
+    // ✅ Read + encode
+    const base64Image = fs.readFileSync(imagePath).toString("base64");
 
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  inline_data: {
-                    mime_type: req.file.mimetype,
-                    data: base64Image,
-                  },
-                },
-                {
-                  text: cleanPrompt,
-                },
-              ],
-            },
+    // ✅ Vertex AI with function calling
+    const model = vertexAI.getGenerativeModel({
+      model: "gemini-2.5-flash",
+      tools: [{ functionDeclarations: [analyzeImageSchema] }],
+    });
+
+    const resultAI = await model.generateContent({
+      contents: [
+        {
+          role: "user",
+          parts: [
+            { inline_data: { mime_type: req.file.mimetype, data: base64Image } },
+            { text: prompt },
           ],
-        }),
+        },
+      ],
+      toolConfig: {
+        functionCallingConfig: {
+          mode: "ANY", // Force Gemini to pick a function instead of free text
+        },
       },
-    );
+    });
 
-    if (!geminiRes.ok) {
-      const errorData = await geminiRes.json();
-      console.error("Gemini API error:", errorData);
-      return res.status(geminiRes.status).json({
-        error: errorData.error?.message || "Unknown error from Gemini API.",
-      });
+    // ✅ Extract function call
+    const fnCall = resultAI.response?.candidates?.[0]?.content?.parts?.find(
+      (p) => p.functionCall
+    )?.functionCall;
+
+    if (!fnCall || !fnCall.args) {
+      console.error("❌ No structured functionCall:", JSON.stringify(resultAI, null, 2));
+      return res.status(500).json({ error: "No structured description returned." });
     }
 
-    const data = await geminiRes.json();
-    console.log("Gemini API response:", JSON.stringify(data, null, 2));
-
-    const responseText = data.candidates?.length
-      ? data.candidates[0].content?.parts?.[0]?.text ||
-        "Response format unexpected."
-      : "No candidates returned from Gemini.";
-
-    res.json({ response: responseText });
+    // ✅ Clean, structured result
+    const response = fnCall.args;
+    res.json({ response });
   } catch (err) {
-    console.error("Error analyzing image:", err);
+    console.error("Image analysis error:", err);
     res.status(500).json({ error: "Error analyzing image." });
   } finally {
-    if (fs.existsSync(imagePath)) {
-      fs.unlinkSync(imagePath); // Cleanup temp file
-    }
+    if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath); // cleanup temp upload
   }
 });
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { UploadInput } from '../UploadInput/UploadInput';
 import { useRequestCounter } from '../../context/RequestCounterContext';
-import { useRecaptchaReady } from '../../helpers/RecaptchaProvider';
+import { useRecaptchaReady } from '../../helpers/useRecaptchaReady';
 import { getRecaptchaToken } from '../../helpers/getRecaptchaToken';
 import './upload-text.scss';
 
@@ -24,11 +24,10 @@ const UploadText = () => {
     setAnalyzeStatus('starting');
 
     if (!recaptchaReady) {
-      setErrorMessage('reCAPTCHA not ready. Please wait a moment.');
+      setErrorMessage('reCAPTCHA not ready.');
       setAnalyzeStatus('error');
       return;
     }
-
     if (requestsRemaining === 0) {
       setErrorMessage('Request limit reached.');
       setAnalyzeStatus('error');
@@ -37,49 +36,48 @@ const UploadText = () => {
 
     try {
       const recaptchaToken = await getRecaptchaToken('analyze_text');
-
       setAnalyzeStatus('processing');
 
-      const res = await fetch('/api/analyze-text', {
+      const response = await fetch('/api/analyze-text', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-recaptcha-token': recaptchaToken,
-        },
+        headers: { 'Content-Type': 'application/json', 'x-recaptcha-token': recaptchaToken },
         body: JSON.stringify({ gcsUrl: url }),
       });
 
-      const remaining = res.headers.get('ratelimit-remaining');
-      if (remaining !== null) {
-        setRequestsRemaining(parseInt(remaining, 10));
+      const remaining = response.headers.get('ratelimit-remaining');
+      if (remaining !== null) setRequestsRemaining(parseInt(remaining, 10));
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setErrorMessage(data.error || 'Vertex AI analysis failed.');
+        if (typeof data.requestsRemaining === 'number')
+          setRequestsRemaining(data.requestsRemaining);
+        setAnalyzeStatus('error');
+        return;
       }
 
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || 'Vertex AI analysis failed.');
-
-      setAnalysisResult(data.result || 'No result returned.');
-      setAnalyzeStatus('success');
-    } catch (err: any) {
+      if (data.summary) {
+        setAnalysisResult(data.summary);
+        setAnalyzeStatus('success');
+      } else {
+        setErrorMessage('Invalid response from server.');
+        setAnalyzeStatus('error');
+      }
+    } catch (err) {
       console.error('Analysis error:', err);
       setAnalyzeStatus('error');
-      setErrorMessage(err.message || 'Vertex AI analysis failed.');
+      setErrorMessage(err instanceof Error ? err.message : 'Vertex AI analysis failed.');
     }
   };
 
-  const handleUploadError = (error: string) => {
-    setUploadStatus('error');
-    setErrorMessage(error);
-  };
-
   return (
-    <section className="example-container">
+    <section className="upload-text example-container">
       <h3>Cloud Storage + Vertex AI - Upload Text File + Summary</h3>
-
       <UploadInput
         acceptedTypes={['.txt']}
         storagePath="uploads/text-files/"
-        label="Upload a Text File (.txt) to Cloud Storage, summarize with Vertex AI after upload"
+        label="Upload a Text File (.txt) and summarize"
         onUploadStart={() => {
           setUploadStatus('uploading');
           setAnalyzeStatus('idle');
@@ -87,9 +85,14 @@ const UploadText = () => {
           setErrorMessage(null);
         }}
         onUploadSuccess={handleUploadSuccess}
-        onError={handleUploadError}
+        onError={(error) => {
+          setUploadStatus('error');
+          setErrorMessage(error);
+        }}
       />
+
       <p className="request-warning-text">⚡ Costs 2 requests (upload + analyze)</p>
+
       <div className="status-box">
         {uploadStatus === 'uploading' && (
           <p>

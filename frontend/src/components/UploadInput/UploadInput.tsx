@@ -21,57 +21,54 @@ export const UploadInput = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
-  // ✅ Generate a unique ID per instance
   const uniqueId = useRef(`file-upload-${Math.random().toString(36).slice(2, 11)}`).current;
 
-  const validateJsonFile = (file: File): Promise<void> => {
-    return new Promise((resolve, reject) => {
+  const validateJsonFile = (file: File): Promise<void> =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (event) => {
         try {
-          const content = event.target?.result as string;
-          if (!content.trim()) {
-            throw new Error('File is empty.');
-          }
+          const content = (event.target?.result as string) ?? '';
+          if (!content.trim()) throw new Error('File is empty.');
+
           if (content.trim().startsWith('[')) {
-            // JSON array
-            JSON.parse(content);
+            JSON.parse(content); // array JSON
           } else {
-            // JSONL format
-            const lines = content.split('\n').filter(Boolean);
-            lines.forEach((line) => JSON.parse(line));
+            content
+              .split('\n')
+              .filter(Boolean)
+              .forEach((line) => JSON.parse(line)); // JSONL
           }
           resolve();
-        } catch (err: any) {
-          reject(new Error('Invalid JSON/JSONL format: ' + err.message));
+        } catch (err) {
+          reject(
+            err instanceof Error
+              ? new Error('Invalid JSON/JSONL format: ' + err.message)
+              : new Error('Invalid JSON/JSONL format'),
+          );
         }
       };
       reader.onerror = () => reject(new Error('Error reading file.'));
       reader.readAsText(file);
     });
-  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setSelectedFileName(file.name);
-
     onUploadStart();
 
     try {
-      const isJsonUpload = acceptedTypes.includes('.json');
-
-      const fileExtension = file.name.split('.').pop()?.toLowerCase();
-      if (!fileExtension || !acceptedTypes.includes(`.${fileExtension}`)) {
-        throw new Error(`Unsupported file type: .${fileExtension}`);
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      if (!ext || !acceptedTypes.includes(`.${ext}`)) {
+        throw new Error(`Unsupported file type: .${ext || 'unknown'}`);
       }
 
-      if (isJsonUpload) {
+      if (acceptedTypes.includes('.json')) {
         await validateJsonFile(file);
       }
 
-      // ✅ Get reCAPTCHA token
       const recaptchaToken = await getRecaptchaToken('upload_file');
 
       const formData = new FormData();
@@ -80,26 +77,24 @@ export const UploadInput = ({
 
       const res = await fetch('/api/upload-file', {
         method: 'POST',
-        headers: {
-          'x-recaptcha-token': recaptchaToken,
-        },
+        headers: { 'x-recaptcha-token': recaptchaToken },
         body: formData,
       });
 
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Upload failed: ${errorText.slice(0, 100)}`);
+        throw new Error(data.error || `Upload failed (status ${res.status})`);
       }
 
-      const data = await res.json();
+      if (!data.url) throw new Error('No file URL returned by server.');
+
       onUploadSuccess(data.url);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Upload error:', err);
-      onError(err.message);
+      onError(err instanceof Error ? err.message : 'Unknown upload error');
     } finally {
-      if (inputRef.current) {
-        inputRef.current.value = '';
-      }
+      if (inputRef.current) inputRef.current.value = '';
     }
   };
 
