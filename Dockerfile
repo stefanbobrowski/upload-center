@@ -18,7 +18,7 @@ RUN cd backend && npm install --omit=dev
 # Copy backend code
 COPY backend ./backend
 
-# Copy built frontend into backend’s public dist folder
+# Copy built frontend into backend’s expected dist folder
 COPY --from=build-frontend /app/frontend/dist ./backend/frontend/dist
 
 # Set working dir
