@@ -78,6 +78,12 @@ const globalLimiter = rateLimit({
   message: "Too many requests, please try again in an hour.",
   standardHeaders: true,
   legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      error: "Too many requests, please try again in an hour.",
+      requestsRemaining: req.rateLimit.remaining ?? 0,
+    });
+  },
 });
 app.use("/api/", globalLimiter);
 

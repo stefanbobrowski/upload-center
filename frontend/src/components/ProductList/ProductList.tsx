@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './product-list.scss';
 
 type Product = {
@@ -13,7 +13,7 @@ export default function ProductList() {
   const [error, setError] = useState<string>('');
   const [requestsRemaining, setRequestsRemaining] = useState<number | null>(null);
 
-  const handleFetchProducts = () => {
+  const handleFetchProducts = useCallback(() => {
     if (requestsRemaining === 0) {
       setError('Request limit reached. Please wait before trying again.');
       return;
@@ -39,7 +39,7 @@ export default function ProductList() {
         setError('Error loading products');
         setLoading(false);
       });
-  };
+  }, [requestsRemaining, setError, setLoading, setProducts, setRequestsRemaining]);
 
   useEffect(() => {
     const cached = sessionStorage.getItem('product-cache');
@@ -54,7 +54,7 @@ export default function ProductList() {
         handleFetchProducts();
       }
     }
-  }, []);
+  }, [handleFetchProducts]);
 
   return (
     <section className="product-list-root example-container">

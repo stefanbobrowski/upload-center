@@ -1,6 +1,11 @@
 import { createContext, useState, useContext } from 'react';
 
-const RequestCounterContext = createContext<any>(null);
+type RequestCounterContextType = {
+  requestsRemaining: number | null;
+  setRequestsRemaining: React.Dispatch<React.SetStateAction<number | null>>;
+};
+
+const RequestCounterContext = createContext<RequestCounterContextType | undefined>(undefined);
 
 export const RequestCounterProvider = ({ children }: { children: React.ReactNode }) => {
   const [requestsRemaining, setRequestsRemaining] = useState<number | null>(null);
@@ -12,4 +17,11 @@ export const RequestCounterProvider = ({ children }: { children: React.ReactNode
   );
 };
 
-export const useRequestCounter = () => useContext(RequestCounterContext);
+// eslint-disable-next-line react-refresh/only-export-components
+export const useRequestCounter = () => {
+  const context = useContext(RequestCounterContext);
+  if (!context) {
+    throw new Error('useRequestCounter must be used within a RequestCounterProvider');
+  }
+  return context;
+};

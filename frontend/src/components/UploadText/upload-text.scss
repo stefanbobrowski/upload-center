@@ -5,13 +5,13 @@
   }
 
   .result {
-    white-space: pre-wrap;
-    background: var(--bg);
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-top: 0.5rem;
-    font-family: monospace;
     max-height: 300px;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--light);
+    border-radius: 6px;
+    background-color: var(--bg);
+    white-space: pre-wrap;
     overflow-y: auto;
     color: var(--text);
   }

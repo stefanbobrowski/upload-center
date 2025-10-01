@@ -1,8 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
-const RecaptchaContext = createContext(false);
-
-export const useRecaptchaReady = () => useContext(RecaptchaContext);
+export const RecaptchaContext = createContext(false);
 
 export const RecaptchaProvider = ({ children }: { children: React.ReactNode }) => {
   const [ready, setReady] = useState(false);
@@ -11,10 +9,12 @@ export const RecaptchaProvider = ({ children }: { children: React.ReactNode }) =
     const existingScript = document.querySelector(
       'script[src^="https://www.google.com/recaptcha/api.js"]',
     );
+
     if (window.grecaptcha) {
       window.grecaptcha.ready(() => setReady(true));
       return;
     }
+
     if (existingScript) {
       existingScript.addEventListener('load', () => setReady(true));
       return;

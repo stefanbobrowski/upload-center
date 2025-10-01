@@ -1,10 +1,10 @@
-import ProductList from '../../components/ProductList/ProductList';
+// import ProductList from '../../components/ProductList/ProductList';
 import SentimentChecker from '../../components/SentimentChecker/SentimentChecker';
 import ImageAnalyzer from '../../components/ImageAnalyzer/ImageAnalyzer';
 import UploadText from '../../components/UploadText/UploadText';
 import UploadJSON from '../../components/UploadJSON/UploadJSON';
 import CloudCounter from '../../components/CloudCounter/CloudCounter';
-import { useRequestCounter } from '../../context/RequestCounterContext';
+import { useRequestCounter } from '../../context/RequestCounterContext.tsx';
 import { MAX_REQUESTS_PER_HOUR } from '../../constants/rateLimits.ts';
 import './examples.scss';
 
@@ -32,9 +32,9 @@ const Examples = () => {
         .
       </p>
       <ol className="examples-list" type="I">
-        <li>
+        {/* <li>
           <ProductList />
-        </li>
+        </li> */}
         <li>
           <SentimentChecker />
         </li>
