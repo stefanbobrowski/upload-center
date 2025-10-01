@@ -47,4 +47,5 @@ jobs:
             --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }} \
             --region=${{ env.REGION }} \
             --platform=managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --set-env-vars=NODE_ENV=production,GCLOUD_PROJECT=${{ env.PROJECT_ID }},GOOGLE_CLOUD_PROJECT=${{ env.PROJECT_ID }},GCLOUD_LOCATION=${{ env.REGION }},VITE_RECAPTCHA_SITE_KEY=${{ secrets.VITE_RECAPTCHA_SITE_KEY }},MAX_REQUESTS_PER_HOUR=${{ secrets.MAX_REQUESTS_PER_HOUR }}
