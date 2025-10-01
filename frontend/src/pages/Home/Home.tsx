@@ -62,7 +62,7 @@ const Home = () => {
           </tr>
           <tr>
             <td>AI</td>
-            <td>Gemini 1.5 Pro (text + image), Vertex AI</td>
+            <td>Gemini 2.5 (text + image), Vertex AI</td>
           </tr>
           <tr>
             <td>Big Data</td>
