@@ -18,13 +18,11 @@ RUN cd backend && npm install --omit=dev
 # Copy backend code
 COPY backend ./backend
 
-# Copy built frontend into backend’s expected dist folder
-COPY --from=build-frontend /app/frontend/dist ./backend/frontend/dist
+# Copy built frontend into the folder server.js expects
+COPY --from=build-frontend /app/frontend/dist ./frontend/dist
 
-# Set working dir
 WORKDIR /app/backend
 
-# Cloud Run expects the app to listen on $PORT
 ENV PORT=8080
 EXPOSE 8080
 
