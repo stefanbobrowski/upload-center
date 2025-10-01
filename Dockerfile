@@ -4,23 +4,23 @@ WORKDIR /app/frontend
 
 COPY frontend/package*.json ./
 RUN npm install
-
-COPY frontend ./
-
+COPY frontend/ ./
 RUN npm run build
 
-# Stage 2: Build backend
+# Stage 2: Backend
 FROM node:20-alpine
 WORKDIR /app
 
-# Copy backend files and install dependencies
+# Copy backend dependencies & install
 COPY backend/package*.json ./backend/
-RUN cd backend && npm install --omit=dev
-COPY backend ./backend
+WORKDIR /app/backend
+RUN npm install --omit=dev
 
-# Copy built frontend into backend’s public/dist folder
+# Copy backend source
+COPY backend/ ./backend/
+
+# Copy built frontend into backend's dist folder
 COPY --from=build-frontend /app/frontend/dist ./frontend/dist
 
-WORKDIR /app/backend
 EXPOSE 8080
 CMD ["node", "server.js"]
