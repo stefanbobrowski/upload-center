@@ -135,7 +135,7 @@ const UploadJSON = () => {
           </pre>
         )}
         {uploadStatus === 'success' && <pre className="success">{uploadMessage}</pre>}
-        {uploadStatus === 'error' && <p className="error">{errorMessage}</p>}
+        {uploadStatus === 'error' && <pre className="error">{errorMessage}</pre>}
       </div>
 
       {queryResult && (
