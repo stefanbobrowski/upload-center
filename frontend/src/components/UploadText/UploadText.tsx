@@ -100,10 +100,10 @@ const UploadText = () => {
             <span className="dot-anim" />
           </p>
         )}
-        {uploadStatus === 'success' && <p className="success">{uploadMessage}</p>}
-        {uploadStatus === 'error' && <p className="error">❌ Upload failed: {errorMessage}</p>}
+        {uploadStatus === 'success' && <pre className="success">{uploadMessage}</pre>}
+        {uploadStatus === 'error' && <pre className="error">❌ Upload failed: {errorMessage}</pre>}
 
-        {analyzeStatus === 'starting' && <p>🧠 Starting Vertex AI Analysis...</p>}
+        {analyzeStatus === 'starting' && <pre>🧠 Starting Vertex AI Analysis...</pre>}
         {analyzeStatus === 'processing' && (
           <p>
             🧠 Summarizing
@@ -112,7 +112,7 @@ const UploadText = () => {
         )}
         {analyzeStatus === 'success' && (
           <>
-            <p className="success">✅ Summary complete:</p>
+            <pre className="success">✅ Summary complete:</pre>
             <pre className="result">{analysisResult}</pre>
           </>
         )}
