@@ -1,12 +1,30 @@
 # Cloud Playground ☁️ - Upload Center 🌆
 
+```
+.             .        .     .     |--|--|--|--|--|--|  |===|==|   /    i
+        .            ______________|__|__|__|__|__|_ |  |===|==|  *  . /=\
+__ *            .   /______________________________|-|  |===|==|       |=|  .
+__|  .      .   .  //______________________________| :----------------------.
+__|   /|\      _|_|//       ooooooooooooooooooooo  |-|                      |
+__|  |/|\|__   ||l|/,-------8                   8 -| |       UPLOAD         |
+__|._|/|\|||.l |[=|/,-------8                   8 -|-|                      |
+__|[+|-|-||||li|[=|---------8                   8 -| |       CENTER         |
+_-----.|/| //:\_[=|\`-------8                   8 -|-|                      |
+ /|  /||//8/ :  8_|\`------ 8ooooooooooooooooooo8 -| |                      |
+/=| //||/ |  .  | |\\_____________  ____  _________|-|                      |
+==|//||  /   .   \ \\_____________ |X|  | _________| `---==------------==---'
+==| ||  /         \ \_____________ |X| \| _________|     ||            ||
+==| |~ /     .     \
+LS|/  /             \______________________________________________________
+```
+
 A full-stack web application for uploading, analyzing, and managing data using **Google Cloud Platform** services. Built for scalability, security, and modern DevOps workflows.
 
-👉 React + Vite Frontend  
-👉 Express + Node.js Backend  
-👉 Google Cloud Storage, BigQuery, Cloud SQL  
-👉 Cloud Run deployment with secure Cloud SQL Proxy  
-👉 Full API security protections (Rate Limiters, CORS, Helmet, IP Logging)
+- React + Vite Frontend
+- Express + Node.js Backend
+- Full API security protections (Rate Limiters, CORS, Helmet, IP Logging)
+- Google Cloud Storage, BigQuery, Cloud SQL for storage
+- Cloud Run deployment
 
 ---
 
@@ -18,17 +36,29 @@ A full-stack web application for uploading, analyzing, and managing data using *
 
 ## 🔠 Project Overview
 
-Welcome to the Cloud Playground — Upload Center!
+Welcome to the Cloud Playground - Upload Center!
 
-Explore hands-on examples to see it in action, showcasing the power of modern backend development, scalable cloud infrastructure, and AI integrations — all built on **Google Cloud Platform (GCP)**.
+Explore hands-on examples demonstrating the power of modern full-stack development, scalable cloud infrastructure, and AI integrations - all built on **Google Cloud Platform (GCP)**.
 
-This project demonstrates a secure, production-grade full-stack architecture featuring:
-
-- **Cloud SQL (PostgreSQL):** Structured data storage
 - **Cloud Run:** Dockerized backend + full app delivery
+- **Cloud SQL (PostgreSQL):** Structured data storage
 - **Cloud Storage:** File uploads (text, images, JSON)
 - **BigQuery:** Large-scale JSON analysis
-- **Vertex AI & Gemini Pro:** Text and image understanding
+- **Vertex AI & Gemini Pro:** Text and image analysis
+
+---
+
+## 📆 Features
+
+- ✅ Secure PostgreSQL access with Cloud SQL Proxy
+- ✅ Text sentiment analysis with Gemini AI
+- ✅ Upload and analyze images with Gemini AI
+- ✅ Vertex AI text file sentiment analysis
+- ✅ Upload and validate JSON files to Cloud Storage
+- ✅ Load and analyze uploaded files with BigQuery
+- ✅ Rate limiting on all sensitive routes
+- ✅ GitHub Actions CI/CD for Dockerized Cloud Run deployment
+- ✅ Persistent Light/Dark Mode Theme
 
 ---
 
@@ -38,7 +68,7 @@ This project demonstrates a secure, production-grade full-stack architecture fea
 | -------- | ---------------------------------------------- |
 | Frontend | Vite + React (TypeScript, SWC)                 |
 | Backend  | Node.js, Express                               |
-| AI       | Gemini 2.5 (text + image), Vertex AI       |
+| AI       | Gemini 2.5 (text + image), Vertex AI           |
 | Big Data | BigQuery                                       |
 | Database | Cloud SQL (PostgreSQL)                         |
 | Storage  | Google Cloud Storage                           |
@@ -63,113 +93,7 @@ Built with real-world production security in mind. Heavy focus on securing acces
 
 ## 🚀 Why It Matters
 
-Upload Center is more than a learning sandbox — it's a blueprint for building secure, scalable, cloud-native web applications using today's most powerful tools from Google Cloud. Whether you're testing uploads, analyzing data, or integrating AI, this platform offers a real-world, extensible foundation for modern web development.
-
----
-
-## 📆 Features
-
-- ✅ Secure PostgreSQL access with Cloud SQL Proxy
-- ✅ Text sentiment analysis with Gemini AI
-- ✅ Upload and analyze images with Gemini AI
-- ✅ Vertex AI text file sentiment analysis
-- ✅ Upload and validate JSON files to Cloud Storage
-- ✅ Load and analyze uploaded files with BigQuery
-- ✅ Rate limiting on all sensitive routes
-- ✅ GitHub Actions CI/CD for Dockerized Cloud Run deployment
-- ✅ Persistent Light/Dark Mode Theme
-
----
-
-## 📂 Project Structure
-
-```
-/frontend            # Vite + React frontend
-/backend             # Express server + API routes
-/backend/db.js       # PostgreSQL connection (via Cloud SQL Proxy)
-/backend/routes      # Upload, BigQuery, Sentiment, Image Analysis
-/.env                # Environment variables (gitignored)
-/.github/workflows/  # GitHub Actions CI/CD workflow files
-```
-
----
-
-## ⚙️ Local Development
-
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/stefanbobrowski/upload-center.git
-cd upload-center
-```
-
-### 2. Set up backend environment variables
-
-Create `backend/.env`:
-
-```env
-DB_USER=your-db-user
-DB_PASSWORD=your-db-password
-DB_HOST=your-cloud-sql-ip (or socket path)
-DB_NAME=your-db-name
-DB_PORT=your-db-port
-GOOGLE_APPLICATION_CREDENTIALS=path-to-your-service-account.json
-RECAPTCHA_SECRET_KEY=your-recaptcha-key (optional for bot protection)
-```
-
-### 3. Start the frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-### 4. Start the backend
-
-```bash
-cd backend
-npm install
-node server.js
-```
-
----
-
-## ☁️ Cloud Deployment (Cloud Run + Cloud SQL Proxy)
-
-### 1. Build the frontend
-
-```bash
-cd frontend
-npm run build
-```
-
-### 2. Docker build & push (CI/CD or manual)
-
-```bash
-docker build -t gcr.io/YOUR_PROJECT_ID/upload-center .
-docker push gcr.io/YOUR_PROJECT_ID/upload-center
-```
-
-### 3. Set Cloud Run environment variables
-
-```
-DB_USER=your-db-user
-DB_PASSWORD=your-password
-DB_NAME=your-db-name
-DB_PORT=your-db-port
-INSTANCE_CONNECTION_NAME=your-project:region:cloudsql-instance
-GOOGLE_APPLICATION_CREDENTIALS=inline-json-or-mount-secret
-RECAPTCHA_SECRET_KEY=your-recaptcha-key (optional)
-```
-
-### 4. Deploy via GitHub Actions or `gcloud run deploy`
-
----
-
-## 🤔 Future Work
-
-- User login / authentication
+Upload Center is more than a learning sandbox, it's a blueprint for building secure, scalable, cloud-native web applications using today's most powerful tools from Google Cloud. Whether you're testing uploads, analyzing data, or integrating AI, this platform offers a real-world, extensible foundation for modern web development.
 
 ---
 
@@ -189,6 +113,4 @@ See [LICENSE](./LICENSE) for full details.
 
 ## 📁 Full Code Repository
 
-Feel free to view the code or contribute with a pull request.
-You can explore the full source code for Upload Center here:
 [📁 GitHub – Upload Center](https://github.com/stefanbobrowski/upload-center)
